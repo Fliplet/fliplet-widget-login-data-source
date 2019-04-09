@@ -204,6 +204,9 @@ $('[data-login-ds-id]').each(function() {
               session: authorization.session,
               entry: entry,
               userProfile: user
+            }).catch(function (err) {
+              console.warn(err);
+              return Promise.resolve();
             });
           });
         })
