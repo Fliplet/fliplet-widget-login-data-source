@@ -141,7 +141,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       var _this = $(this);
       _this.find('.login-error').addClass('hidden');
 
-      var profileEmail = $container.find('input.profile_email').val().toLowerCase();
+      var profileEmail = $container.find('input.profile_email').val();
       var profilePassword = $container.find('input.profile_password').val();
 
       // Triggers loading
