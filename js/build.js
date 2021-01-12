@@ -255,14 +255,14 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $container.on('click keydown', '.btn-forget-pass', function(event) {
       if (event.type === 'click' || event.which === 32 || event.which === 13) {
         $container.find('.fl-login-holder').fadeOut(100, function() {
-        $container.find('.fl-restore-pass').fadeIn(300);
-        calculateElHeight($container.find('.state[data-state=verify-email]'));
+          $container.find('.fl-restore-pass').fadeIn(300);
+          calculateElHeight($container.find('.state[data-state=verify-email]'));
         });
       }
     });
 
-    $container.on('click keydown', '.back-login', function() {
-        if (event.type === 'click' || event.which === 32 || event.which === 13) {
+    $container.on('click keydown', '.back-login', function(event) {
+      if (event.type === 'click' || event.which === 32 || event.which === 13) {
         $container.find('.fl-restore-pass').fadeOut(100, function() {
           $container.find('.fl-login-holder').fadeIn(250);
 
