@@ -1,1 +1,1 @@
-# fliplet-widget-login-data-source
+# Fliplet Data Source login (v2.0)
