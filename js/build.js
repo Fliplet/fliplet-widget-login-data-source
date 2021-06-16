@@ -9,6 +9,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
   }
 
   this.pvName = 'login_data_source_component_' + Fliplet.Env.get('appId');
+
   var dataStructure = {
     auth_token: '',
     id: '',
@@ -76,9 +77,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
             }
 
             var navigate = Fliplet.Navigate.to(data.loginAction);
+
             if (typeof navigate === 'object' && typeof navigate.then === 'function') {
               return navigate;
             }
+
             return Promise.resolve();
           })
           .catch(function(error) {
@@ -90,18 +93,18 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
   function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
     return re.test(email);
   }
 
   function calculateElHeight(el) {
-
     var elementHeight = el.outerHeight();
+
     el.parents('.fl-restore-pass').css('height', elementHeight);
 
     if (el.hasClass('start')) {
       el.removeClass('start').addClass('present');
     }
-
   }
 
   function loginFromDataSource(dataSourceId, where) {
@@ -118,12 +121,13 @@ Fliplet.Widget.instance('login-ds', function(data) {
   function resetFromDataSource(dataSourceId, where) {
     return Fliplet.DataSources.connect(data.dataSource, { offline: false })
       .then(function(dataSource) {
-        return dataSource.sendValidation({type: 'email', where: where});
+        return dataSource.sendValidation({ type: 'email', where: where });
       });
   }
 
   function createUserProfile(entry) {
     entry = entry || {};
+
     if (!entry.dataSourceId || !entry.id) {
       return;
     }
@@ -138,7 +142,9 @@ Fliplet.Widget.instance('login-ds', function(data) {
   function attachEventListeners() {
     $container.on('submit', '.fl-login-form form', function(e) {
       e.preventDefault();
+
       var _this = $(this);
+
       _this.find('.login-error').addClass('hidden');
 
       var profileEmail = $container.find('input.profile_email').val().toLowerCase();
@@ -158,11 +164,13 @@ Fliplet.Widget.instance('login-ds', function(data) {
         _this.find('.loader').removeClass('show');
         // Show error
         _this.find('.login-error').html('Please enter a valid email.').removeClass('hidden');
+
         return;
       }
 
       // CHECK FOR EMAIL ON DATA SOURCE
       var where = {};
+
       where[DATA_DIRECTORY_EMAIL_COLUMN] = profileEmail;
       where[DATA_DIRECTORY_PASS_COLUMN] = profilePassword;
       loginFromDataSource(APP_VALIDATION_DATA_DIRECTORY_ID, where)
@@ -178,11 +186,14 @@ Fliplet.Widget.instance('login-ds', function(data) {
           });
 
           var entry = authorization.session.entries.dataSource;
+
           // Reset Login button
           userDataPV.entry = entry;
           userDataPV.userLogged = true;
+
           // Set PV to be used by Chat
           var user = createUserProfile(entry);
+
           return Promise.all([
             Fliplet.App.Storage.set({
               'fl-chat-source-id': entry.dataSourceId,
@@ -243,9 +254,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
           _this.find('.btn-label').removeClass('hidden');
           _this.find('.loader').removeClass('show');
           _this.find('.login-error').html(Fliplet.parseError(error)).removeClass('hidden');
-          Fliplet.UI.Toast.error(error, {
-            message: 'Login error'
-          });
         });
     });
 
@@ -280,6 +288,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       event.preventDefault();
 
       var _this = $(this).find('.verify-identity');
+
       _this.addClass('loading');
       _this.find('.btn-label').addClass('hidden');
       _this.find('.loader').addClass('show');
@@ -287,6 +296,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       window.resetEmail = $container.find('input.reset-email-field').val().toLowerCase(); // Get email for reset
 
       $container.find('.reset-email-error').addClass('hidden');
+
       // EMAIL FOUND ON DATA SOURCE
       if ($container.find('.state[data-state=verify-email] .form-group').hasClass('has-error')) {
         $container.find('.state[data-state=verify-email] .form-group').removeClass('has-error');
@@ -301,11 +311,13 @@ Fliplet.Widget.instance('login-ds', function(data) {
         $container.find('.reset-email-error').html('Please enter a valid email address and try again.').removeClass('hidden');
         $container.find('.state[data-state=verify-email] .form-group').addClass('has-error');
         calculateElHeight($container.find('.state[data-state=verify-email]'));
+
         return;
       }
 
       // CHECK FOR EMAIL ON DATA SOURCE
       var where = {};
+
       where[DATA_DIRECTORY_EMAIL_COLUMN] = resetEmail;
 
       Fliplet.Analytics.trackEvent({
@@ -318,6 +330,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
           if ($container.find('.state[data-state=verify-email] .form-group').hasClass('has-error')) {
             $container.find('.state[data-state=verify-email] .form-group').removeClass('has-error');
           }
+
           $container.find('.state[data-state=verify-email]').removeClass('present').addClass('past');
           $container.find('.verify-user-email').text(resetEmail); // UPDATES TEXT WITH EMAIL
           _this.removeClass('loading');
@@ -325,7 +338,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
           _this.find('.loader').removeClass('show');
           calculateElHeight($container.find('.state[data-state=verify-code]'));
           $container.find('.state[data-state=verify-code]').removeClass('future').addClass('present');
-
         })
         .catch(function(error) {
           // EMAIL NOT FOUND ON DATA SOURCE
@@ -333,7 +345,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
           _this.removeClass('loading');
           _this.find('.btn-label').removeClass('hidden');
           _this.find('.loader').removeClass('show');
-          $container.find('.reset-email-error').html('We couldn\'t find your email in our system. Please try again.').removeClass('hidden');
+          $container.find('.reset-email-error').html(Fliplet.parseError(error)).removeClass('hidden');
           $container.find('.state[data-state=verify-email] .form-group').addClass('has-error');
           calculateElHeight($container.find('.state[data-state=verify-email]'));
         });
@@ -354,6 +366,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       if (userDataPV.code !== '' && userDataPV.code_generated_at > Date.now() - (CODE_VALID * 60 * 1000)) {
         $container.find('.have-code').removeClass('hidden');
       }
+
       $container.find('.authenticate, .verify-identity').removeClass('loading');
       $container.find('.authenticate, .verify-identity').find('.btn-label').removeClass('hidden');
       $container.find('.authenticate, .verify-identity').find('.loader').removeClass('show');
@@ -373,6 +386,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
     $container.on('submit', '.form-verify-code', function(event) {
       event.preventDefault();
+
       var _this = $(this).find('.authenticate');
 
       $container.find('.pin-sent-success, .pin-verify-error, .pin-sent-error').addClass('hidden');
@@ -382,9 +396,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
       $(this).find('.loader').addClass('show');
 
       var code = $container.find('.pin-code-field').val();
+
       Fliplet.DataSources.connect(data.dataSource, { offline: false })
         .then(function(dataSource) {
           var where = { code: code };
+
           where[data.emailColumn] = resetEmail;
 
           Fliplet.Session.get()
@@ -392,6 +408,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
               dataSource.validate({ type: 'email', where: where })
                 .then(function(entry) {
                   dataSourceEntry = entry;
+
                   return Promise.all([
                     Fliplet.App.Storage.set({
                       'fl-chat-source-id': entry.dataSourceId,
@@ -445,6 +462,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       event.preventDefault();
 
       var _this = $(this).find('.update-password');
+
       _this.addClass('loading');
       _this.find('.btn-label').addClass('hidden');
       _this.find('.loader').addClass('show');
@@ -471,6 +489,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         _this.find('.loader').removeClass('show');
 
         calculateElHeight($container.find('.state[data-state=reset-password]'));
+
         return;
       }
 
@@ -478,6 +497,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         if (session.entries && session.entries.dataSource) {
           entryId = 'session'; // this works because you can use it as an ID on the backend
           entry = session.entries.dataSource;
+
           return Fliplet.DataSources.connect(data.dataSource, { offline: false }).then(function(dataSource) {
             var options = {
               type: 'update',
@@ -554,14 +574,17 @@ Fliplet.Widget.instance('login-ds', function(data) {
       Fliplet.DataSources.connect(data.dataSource, { offline: false })
         .then(function(dataSource) {
           var where = {};
+
           where[data.emailColumn] = resetEmail;
           dataSource.sendValidation({ type: 'email', where: where })
             .then(function() {
               $container.find('.pin-code-field').val('');
               $container.find('.pin-sent-success').removeClass('hidden');
+
               if ($container.find('.state[data-state=verify-code] .form-group').hasClass('has-error')) {
                 $container.find('.state[data-state=verify-code] .form-group').removeClass('has-error');
               }
+
               if (!$container.find('.resend-code').hasClass('hidden')) {
                 $container.find('.resend-code').addClass('hidden');
               }
@@ -590,7 +613,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
       window.userDataPV = data;
       success_callback();
     }, fail_callback);
-
   }
 
   Fliplet().then(function() {
