@@ -1,6 +1,8 @@
 Fliplet.Widget.instance('login-ds', function(data) {
   var $container = $(this);
 
+  $(this).translate();
+
   var dataSourceEntry; // Data source entry after user verify email
 
   // Do not track login related redirects
@@ -41,7 +43,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         Fliplet.User.getCachedSession()
           .then(function(session) {
             if (!session || !session.accounts) {
-              return Promise.reject('Login session not found');
+              return Promise.reject(T('loginDataSource.sessionNotFound'));
             }
 
             var dataSource = session.accounts.dataSource || [];
@@ -50,7 +52,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
             });
 
             if (!verifiedAccounts.length) {
-              return Promise.reject('Login session not found');
+              return Promise.reject(T('loginDataSource.sessionNotFound'));
             }
 
             // Update stored email address based on retrieved session
@@ -73,7 +75,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
           })
           .then(function() {
             if (typeof data.loginAction === 'undefined') {
-              return Promise.reject('Screen redirect is not set up.');
+              return Promise.reject(T('loginDataSource.redirectMissing'));
             }
 
             var navigate = Fliplet.Navigate.to(data.loginAction);
@@ -163,7 +165,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         _this.find('.btn-label').removeClass('hidden');
         _this.find('.loader').removeClass('show');
         // Show error
-        _this.find('.login-error').html('Please enter a valid email.').removeClass('hidden');
+        _this.find('.login-error').html(T('loginDataSource.emailInvalid')).removeClass('hidden');
 
         return;
       }
@@ -224,11 +226,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
               type: 'regular',
               duration: false,
               tapToDismiss: false,
-              title: 'Login successful',
-              message: 'To test security features in Fliplet Studio, go to "Preview > Change preview settings > Enable security" to enable security.',
+              title: T('loginDataSource.successToast.title'),
+              message: T('loginDataSource.successToast.message'),
               actions: [
                 {
-                  label: 'OK',
+                  label: T('loginDataSource.successToast.ok'),
                   action: function() {
                     Fliplet.UI.Toast.dismiss();
                   }
@@ -238,7 +240,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
           }
 
           if (typeof data.loginAction === 'undefined') {
-            return Fliplet.UI.Toast('Login successful');
+            return Fliplet.UI.Toast(T('loginDataSource.successToast.title'));
           }
 
           return Fliplet.Navigate.to(data.loginAction);
@@ -472,11 +474,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
       var error = '';
 
       if (!newPassword || !confirmPassword) {
-        error = 'Enter a new password and confirm. Try again.';
+        error = T('loginDataSource.newPasswordMissing');
       }
 
       if (newPassword !== confirmPassword) {
-        error = 'Passwords don\'t match. Please try again.';
+        error = T('loginDataSource.passwordMismatch');
       }
 
       if (error) {
@@ -512,7 +514,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
             return dataSource.query(options)
               .then(function onPasswordUpdateSuccess(affected) {
                 if (!affected || !affected.length) {
-                  return Promise.reject('Account not found for: ' + resetEmail);
+                  return Promise.reject(T('loginDataSource.accountNotFound', { email: resetEmail }));
                 }
 
                 _this.removeClass('loading');
@@ -524,12 +526,12 @@ Fliplet.Widget.instance('login-ds', function(data) {
                 $container.find('.state[data-state=all-done]').removeClass('future').addClass('present');
               })
               .catch(function onPasswordUpdateError(error) {
-                // Query failed due to some datasource missconfiguration or access denied
+                // Query failed due to some data source misconfiguration or access denied
                 _this.removeClass('loading');
                 _this.find('.btn-label').removeClass('hidden');
                 _this.find('.loader').removeClass('show');
 
-                $container.find('.reset-password-error').html(Fliplet.parseError(error) || 'Something went wrong! Try again.');
+                $container.find('.reset-password-error').html(Fliplet.parseError(error) || T('loginDataSource.unknownError'));
                 $container.find('.reset-password-error').removeClass('hidden');
               });
           });
@@ -554,7 +556,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         $container.find('.authenticate').find('.btn-label').removeClass('hidden');
         $container.find('.authenticate').find('.loader').removeClass('show');
 
-        $container.find('.reset-email-error').html('You need to verify your email first.').removeClass('hidden');
+        $container.find('.reset-email-error').html(T('loginDataSource.verifyEmailFirst')).removeClass('hidden');
         $container.find('.state[data-state=verify-email] .form-group').addClass('has-error');
 
         calculateElHeight($container.find('.state[data-state=verify-email]'));

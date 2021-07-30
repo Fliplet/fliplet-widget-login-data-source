@@ -1,0 +1,40 @@
+{
+  "loginDataSource": {
+    "instruction": "Enter your access details below",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "loginError": "The details you entered don’t match our records. Please try again.",
+    "login": "Log in",
+    "loading": "Loading...",
+    "forgotPassword": "Forgot your password?",
+    "verifyInstruction": "To reset your password you must verify your email address.",
+    "emailNotFound": "Your email address cannot be found. Please try again.",
+    "backToLogin": "Back to Login",
+    "verifyEmail": "Verify email",
+    "hasVerificationCode": "I have a verification code",
+    "verifyCodeInstruction": "A verification code was sent to <span class=\"verify-user-email\"></span>.",
+    "verificationCodePlaceholder": "Enter verification code",
+    "verificationCodeError": "You entered the wrong code or the code expired. Please try again or request a new code.",
+    "resend": "Resend verification code",
+    "verify": "Verify",
+    "resendSuccess": "A new code was sent to your email.",
+    "newPasswordInstruction": "Enter your new password below.",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "passwordMismatch": "Passwords don't match. Please try again.",
+    "reset": "Reset password",
+    "resetSuccess": "You can now login using your email address and new password",
+    "sessionNotFound": "Login session not found",
+    "redirectMissing": "Screen redirect is not set up.",
+    "emailInvalid": "Please enter a valid email.",
+    "successToast": {
+      "title": "Login successful",
+      "message": "To test security features in Fliplet Studio, go to \"Preview > Change preview settings > Enable security\" to enable security.",
+      "ok": "OK"
+    },
+    "newPasswordMissing": "Enter a new password and confirm. Try again.",
+    "accountNotFound": "Account not found for: {{email}}",
+    "unknownError": "Something went wrong! Try again.",
+    "verifyEmailFirst": "You need to verify your email first."
+  }
+}

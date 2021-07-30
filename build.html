@@ -1,32 +1,34 @@
 <div data-login-ds-id="{{id}}" data-login-ds-uuid="{{uuid}}">
-  {{#if heading}}<h1 class="text-center">{{heading}}</h1>{{/if}}
+  {{#if heading}}
+    <h1 class="text-center">{{heading}}</h1>
+  {{/if}}
   <div class="fl-login-holder" ontouchstart="">
     <div class="fl-login-header">
-      <p class="instruction">Enter your access details below</p>
+      <p class="instruction" data-translate="loginDataSource.instruction">Enter your access details below</p>
     </div>
 
     <div class="fl-login-form">
       <form class="form-horizontal form-login">
         <div class="form-group clearfix ">
           <div class="col-sm-12 fl-email">
-            <input type="email" class="form-control profile_email focus-outline" name="Email" placeholder="Enter your email" autocomplete="false" />
+            <input type="email" class="form-control profile_email focus-outline" name="Email" data-translate="[placeholder]loginDataSource.emailPlaceholder" placeholder="Enter your email" autocomplete=" false" />
           </div>
         </div>
 
         <div class="form-group clearfix">
           <div class="col-sm-12 fl-password">
-            <input type="password" class="form-control profile_password focus-outline" name="Password" placeholder="Enter your password" autocomplete="new-password" />
+            <input type="password" class="form-control profile_password focus-outline" name="Password" data-translate="[placeholder]loginDataSource.passwordPlaceholder" placeholder="Enter your password" autocomplete="new-password" />
           </div>
         </div>
 
         <div class="form-btns clearfix">
-          <p class="text-danger login-error hidden">The details you entered don’t match our records. Please try again.</p>
+          <p class="text-danger login-error hidden" data-translate="loginDataSource.loginError">The details you entered don’t match our records. Please try again.</p>
           <p><button class="btn btn-primary btn-login focus-outline" type="submit">
-            <span class="btn-label">Log in</span>
-            <span class="loader">Loading...</span>
-          </button></p>
+              <span class="btn-label" data-translate="loginDataSource.login">Log in</span>
+              <span class="loader" data-translate="loginDataSource.loading">Loading...</span>
+            </button></p>
           {{#if allowReset}}
-          <p><span class="btn btn-link btn-forget-pass focus-outline" tabindex="0">Forgot your password?</span></p>
+            <p><span class="btn btn-link btn-forget-pass focus-outline" tabindex="0" data-translate="loginDataSource.forgotPassword">Forgot your password?</span></p>
           {{/if}}
         </div>
       </form>
@@ -34,64 +36,64 @@
   </div>
 
   {{#if allowReset}}
-  <div class="fl-restore-pass" ontouchstart="">
-    <div class="state start" data-state="verify-email">
-      <form class="form-horizontal form-verify-email">
-        <p class="instruction">To reset your password you must verify your email address.</p>
-        <div class="input-wrapper">
-          <input type="email" class="form-control reset-email-field focus-outline" placeholder="Enter your email" autocomplete="false" />
-        </div>
-        <p class="text-danger reset-email-error hidden">Your email address cannot be found. Please try again.</p>
-        <p>
-          <span class="btn btn-link back-login focus-outline" tabindex="0">Back to Login</span>
-          <button class="btn btn-primary verify-identity focus-outline" tabindex="0" type="submit">
-            <span class="btn-label">Verify email</span>
-            <span class="loader">Loading...</span>
-          </button>
-        </p>
-        <p><span class="btn btn-link have-code hidden">I have a verification code</span></p>
-      </form>
-    </div>
+    <div class="fl-restore-pass" ontouchstart="">
+      <div class="state start" data-state="verify-email">
+        <form class="form-horizontal form-verify-email">
+          <p class="instruction" data-translate="loginDataSource.verifyInstruction">To reset your password you must verify your email address.</p>
+          <div class="input-wrapper">
+            <input type="email" class="form-control reset-email-field focus-outline" data-translate="[placeholder]loginDataSource.emailPlaceholder" placeholder="Enter your email" autocomplete="false" />
+          </div>
+          <p class="text-danger reset-email-error hidden" data-translate="loginDataSource.emailNotFound">Your email address cannot be found. Please try again.</p>
+          <p>
+            <span class="btn btn-link back-login focus-outline" tabindex="0" data-translate="loginDataSource.backToLogin">Back to Login</span>
+            <button class="btn btn-primary verify-identity focus-outline" tabindex="0" type="submit">
+              <span class="btn-label" data-translate="loginDataSource.verifyEmail">Verify email</span>
+              <span class="loader" data-translate="loginDataSource.loading">Loading...</span>
+            </button>
+          </p>
+          <p><span class="btn btn-link have-code hidden" data-translate="loginDataSource.hasVerificationCode">I have a verification code</span></p>
+        </form>
+      </div>
 
-    <div class="state future" data-state="verify-code">
-      <form class="form-horizontal form-verify-code">
-        <p class="instruction">A verification code was sent to <span class="verify-user-email"></span>.</p>
-        <div class="input-wrapper">
-          <input type="text" class="form-control pin-code-field focus-outline" placeholder="Enter verification code" />
-          <span class="text-primary fa fa-angle-left back start"></span>
-        </div>
-        <p class="text-danger pin-verify-error hidden">You entered the wrong code or the code expired. Please try again or request a new code.</p>
-        <p class="text-danger pin-sent-error hidden"></p>
-        <p>
-          <span class="btn btn-link resend-code hidden">Resend verification code</span>
-          <button class="btn btn-primary authenticate focus-outline" type="submit">
-            <span class="btn-label">Verify</span>
-            <span class="loader">Loading...</span>
-          </button>
-        </p>
-        <p class="text-success pin-sent-success hidden">A new code was sent to your email.</p>
-      </form>
-    </div>
+      <div class="state future" data-state="verify-code">
+        <form class="form-horizontal form-verify-code">
+          <p class="instruction" data-translate="[html]loginDataSource.verifyCodeInstruction">A verification code was sent to <span class="verify-user-email"></span>.</p>
+          <div class="input-wrapper">
+            <input type="text" class="form-control pin-code-field focus-outline" data-translate="[placeholder]loginDataSource.verificationCodePlaceholder" placeholder="Enter verification code" />
+            <span class="text-primary fa fa-angle-left back start"></span>
+          </div>
+          <p class="text-danger pin-verify-error hidden" data-translate="loginDataSource.verificationCodeError">You entered the wrong code or the code expired. Please try again or request a new code.</p>
+          <p class="text-danger pin-sent-error hidden"></p>
+          <p>
+            <span class="btn btn-link resend-code hidden" data-translate="loginDataSource.resend">Resend verification code</span>
+            <button class="btn btn-primary authenticate focus-outline" type="submit">
+              <span class="btn-label" data-translate="loginDataSource.verify">Verify</span>
+              <span class="loader" data-translate="loginDataSource.loading">Loading...</span>
+            </button>
+          </p>
+          <p class="text-success pin-sent-success hidden" data-translate="loginDataSource.resendSuccess">A new code was sent to your email.</p>
+        </form>
+      </div>
 
-    <div class="state future" data-state="reset-password">
-      <form class="form-horizontal form-reset-password">
-        <p class="instruction">Enter your new password below.</p>
-        <div class="input-wrapper">
-          <input type="password" class="form-control new-password focus-outline" placeholder="Enter your new password" autocomplete="new-password" />
-          <input type="password" class="form-control confirm-password focus-outline" placeholder="Confirm your new password" autocomplete="new-password" />
-        </div>
-        <p class="text-danger reset-password-error hidden">Passwords don't match. Please try again.</p>
-        <p><button class="btn btn-primary update-password focus-outline" tabindex="0" type="submit">
-          <span class="btn-label">Reset password</span>
-          <span class="loader">Loading...</span>
-        </button></p>
-      </form>
-    </div>
+      <div class="state future" data-state="reset-password">
+        <form class="form-horizontal form-reset-password">
+          <p class="instruction" data-translate="loginDataSource.newPasswordInstruction">Enter your new password below.</p>
+          <div class="input-wrapper">
+            <input type="password" class="form-control new-password focus-outline" data-translate="[placeholder]loginDataSource.newPasswordPlaceholder" placeholder="Enter your new password" autocomplete="new-password" />
+            <input type="password" class="form-control confirm-password focus-outline" data-translate="[placeholder]loginDataSource.confirmPasswordPlaceholder" placeholder="Confirm your new password" autocomplete="new-password" />
+          </div>
+          <p class="text-danger reset-password-error hidden" data-translate="loginDataSource.passwordMismatch">Passwords don't match. Please try again.</p>
+          <p><button class="btn btn-primary update-password focus-outline" tabindex="0" type="submit">
+              <span class="btn-label" data-translate="loginDataSource.reset">Reset password</span>
+              <span class="loader" data-translate="loginDataSource.loading">Loading...</span>
+            </button></p>
+        </form>
+      </div>
 
-    <div class="state future" data-state="all-done">
-      <p class="instruction">You can now login using your email address and new password.</p>
-      <p><span class="btn btn-primary back-login focus-outline" tabindex="0">Login</span></p>
+      <div class="state future" data-state="all-done">
+        <p class="instruction" data-translate="loginDataSource.resetSuccess">You can now log in using your email address and new password.</p>
+        <p><span class="btn btn-primary back-login focus-outline" tabindex="0" data-translate="loginDataSource.login">Log in</span></p>
+      </div>
     </div>
-  </div>
   {{/if}}
 </div>
