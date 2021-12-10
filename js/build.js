@@ -225,7 +225,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
               duration: false,
               tapToDismiss: false,
               title: 'Login successful',
-              message: 'To test security features in Fliplet Studio, go to "Preview > Change preview settings > Enable security" to enable security.',
+              message: 'To test security features in Fliplet Studio, go to “Preview > Enable security” to enable security.',
               actions: [
                 {
                   label: 'OK',
