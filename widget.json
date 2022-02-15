@@ -6,9 +6,7 @@
   "tags": ["type:component", "category:security"],
   "provider_only": false,
   "html_tag": "div",
-  "providers": [
-    "com.fliplet.link"
-  ],
+  "providers": ["com.fliplet.link"],
   "interface": {
     "dependencies": [
       "fliplet-core",
@@ -18,11 +16,7 @@
       "bootstrap",
       "tinymce"
     ],
-    "assets": [
-      "vendor/jquery.debounce.js",
-      "js/interface.js",
-      "css/interface.css"
-    ]
+    "assets": ["vendor/jquery.debounce.js", "js/interface.js", "css/interface.css"]
   },
   "build": {
     "dependencies": [
@@ -35,15 +29,7 @@
       "fliplet-datasources",
       "fliplet-session"
     ],
-    "assets": [
-      "vendor/moment.js",
-      "js/build.js",
-      "css/build.css"
-    ]
+    "assets": ["js/build.js", "css/build.css"]
   },
-  "references": [
-    "loginAction.page:page",
-    "resetAction.page:page",
-    "dataSource:dataSource"
-  ]
+  "references": ["loginAction.page:page", "resetAction.page:page", "dataSource:dataSource"]
 }
