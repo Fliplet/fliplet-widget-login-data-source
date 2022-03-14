@@ -36,6 +36,13 @@ input.form-control {
   -webkit-appearance: none;
 }
 
+.fa-eye {
+  position: absolute;
+  top: 15px;
+  right: 30px;
+  display: inline-block;
+}
+
 .fl-login-form .fl-email:before {
   content: "\f0e0";
   display: inline-block;

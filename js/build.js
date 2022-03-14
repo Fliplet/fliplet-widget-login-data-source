@@ -284,6 +284,24 @@ Fliplet.Widget.instance('login-ds', function(data) {
       }
     });
 
+    $container.on('input', '.profile_password', function() {
+      if (data.showPassword && $('.profile_password').val()) {
+        $('.fa-eye').removeClass('invisible');
+      } else {
+        $('.fa-eye').addClass('invisible');
+      }
+    });
+
+    $container.on('click', '.fa-eye', function() {
+      var $passwordInput = $('.profile_password');
+  
+      if ($passwordInput.prop('type') === 'password') {
+        $passwordInput.attr('type', 'text');
+      } else {
+        $passwordInput.attr('type', 'password');
+      }
+    });
+  
     $container.on('submit', '.form-verify-email', function(event) {
       event.preventDefault();
 

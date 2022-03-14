@@ -10,8 +10,11 @@ var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
 
 var currentDataSource;
+var canShowPassword = data.showPassword || false;
 var initialLoadingDone = false;
 var defaultExpireTimeout = 2880;
+
+$('.password-show-checkbox').prop('checked', canShowPassword);
 
 var defaultEmailTemplate = $('#email-template-default').html();
 
@@ -147,6 +150,7 @@ function initDataSourceProvider(currentDataSourceId) {
 
         $('#select-email-field').toggleClass('hidden', !dataSource.id);
         $('#select-pass-field').toggleClass('hidden', !dataSource.id);
+        $('#show-password-checkbox').toggleClass('hidden', !dataSource.id);
       }
     }
   });
@@ -211,6 +215,14 @@ function checkSecurityRules() {
 }
 
 function save(notifyComplete) {
+  if ($('.password-show-checkbox').is(':checked') === true) {
+    canShowPassword = true;
+  } else {
+    canShowPassword = false;
+  }
+
+  data.showPassword = $('.password-show-checkbox').is(':checked');
+  
   // Get and save values to data
   _.forEach(fields, function(fieldId) {
     if (fieldId === 'expireTimeout') {
