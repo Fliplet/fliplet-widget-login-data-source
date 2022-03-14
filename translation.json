@@ -19,6 +19,7 @@
         },
         "verify": {
           "instruction": "A verification code was sent to <span class=\"verify-user-email\"></span>.",
+          "emailPlaceholder": "Enter your email",
           "codePlaceholder": "Enter verification code",
           "mismatch": "You entered the wrong code or the code expired. Please try again or request a new code.",
           "resend": "Resend verification code",
@@ -38,6 +39,7 @@
           "redirectMissing": "Screen redirect is not set up.",
           "emailInvalid": "Please enter a valid email.",
           "newPasswordMissing": "Enter a new password and confirm. Try again.",
+          "passwordMismatch": "Passwords don't match. Please try again.",
           "accountNotFound": "Account not found for: {{email}}",
           "unknown": "Something went wrong! Try again.",
           "verifyEmailFirst": "You need to verify your email first."
