@@ -215,14 +215,9 @@ function checkSecurityRules() {
 }
 
 function save(notifyComplete) {
-  if ($('.password-show-checkbox').is(':checked') === true) {
-    canShowPassword = true;
-  } else {
-    canShowPassword = false;
-  }
+  canShowPassword = $('.password-show-checkbox').is(':checked');
+  data.showPassword = canShowPassword;
 
-  data.showPassword = $('.password-show-checkbox').is(':checked');
-  
   // Get and save values to data
   _.forEach(fields, function(fieldId) {
     if (fieldId === 'expireTimeout') {

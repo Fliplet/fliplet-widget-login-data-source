@@ -1,5 +1,6 @@
 Fliplet.Widget.instance('login-ds', function(data) {
   var $container = $(this);
+  var $passwordInput = $('.profile_password');
 
   var dataSourceEntry; // Data source entry after user verify email
 
@@ -285,21 +286,12 @@ Fliplet.Widget.instance('login-ds', function(data) {
     });
 
     $container.on('input', '.profile_password', function() {
-      if (data.showPassword && $('.profile_password').val()) {
-        $('.fa-eye').removeClass('invisible');
-      } else {
-        $('.fa-eye').addClass('invisible');
-      }
+      $('.fa-eye').toggleClass('invisible', !data.showPassword || !$passwordInput.val());
     });
 
-    $container.on('click', '.fa-eye', function() {
-      var $passwordInput = $('.profile_password');
-  
-      if ($passwordInput.prop('type') === 'password') {
-        $passwordInput.attr('type', 'text');
-      } else {
-        $passwordInput.attr('type', 'password');
-      }
+    $container.on('click', '.fa-eye', function() {  
+      $passwordInput.attr('type', $passwordInput.prop('type') === 'password' ? 'text' : 'password');
+      $('.fa-eye').toggleClass('fa-eye-slash', $passwordInput.prop('type') === 'text');
     });
   
     $container.on('submit', '.form-verify-email', function(event) {
