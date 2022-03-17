@@ -30,6 +30,12 @@ img {
   position: relative;
 }
 
+.fl-new-password,
+.fl-confirm-password {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 input.form-control {
   height: 45px;
   box-shadow: none;

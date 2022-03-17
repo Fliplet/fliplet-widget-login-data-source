@@ -1,6 +1,9 @@
 Fliplet.Widget.instance('login-ds', function(data) {
   var $container = $(this);
   var $passwordInput = $('.profile_password');
+  var $newPasswordInput = $('.new-password');
+  var $confirmPasswordInput = $('.confirm-password');
+  var $passwordInputs = $('.profile_password, .new-password, .confirm-password');
 
   var dataSourceEntry; // Data source entry after user verify email
 
@@ -285,8 +288,28 @@ Fliplet.Widget.instance('login-ds', function(data) {
       }
     });
 
-    $container.on('input', '.profile_password', function() {
+    $container.on('input', $passwordInput, function() {
       $('.fa-eye').toggleClass('invisible', !data.showPassword || !$passwordInput.val());
+    });
+
+    $container.on('input', $newPasswordInput, function() {
+      $('.fa-eye.fl-new-password').toggleClass('invisible', !data.showPassword || !$newPasswordInput.val());
+    });
+
+    $container.on('input', $confirmPasswordInput, function() {
+      $('.fa-eye.fl-confirm-password').toggleClass('invisible', !data.showPassword || !$confirmPasswordInput.val());
+    });
+
+    $container.on('click', '.fa-eye', function() {  
+      $.each($passwordInputs, function(i, val) {
+        if ($(val).prop('type') === 'password') {
+          $(val).attr('type', 'text');
+        } else {
+          $(val).attr('type', 'password');
+        }
+      });
+
+      $('.fa-eye').toggleClass('fa-eye-slash', $passwordInput.prop('type') === 'text');
     });
 
     $container.on('click', '.fa-eye', function() {  
