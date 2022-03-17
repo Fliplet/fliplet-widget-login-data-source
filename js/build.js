@@ -288,16 +288,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
       }
     });
 
-    $container.on('input', $passwordInput, function() {
-      $('.fa-eye').toggleClass('invisible', !data.showPassword || !$passwordInput.val());
-    });
-
-    $container.on('input', $newPasswordInput, function() {
-      $('.fa-eye.fl-new-password').toggleClass('invisible', !data.showPassword || !$newPasswordInput.val());
-    });
-
-    $container.on('input', $confirmPasswordInput, function() {
-      $('.fa-eye.fl-confirm-password').toggleClass('invisible', !data.showPassword || !$confirmPasswordInput.val());
+    $passwordInputs.on('input', function(event) {
+      $($(event.target).next('.fa-eye')).toggleClass('invisible', !data.showPassword || !$(event.target).val());
     });
 
     $container.on('click', '.fa-eye', function() {  
@@ -307,9 +299,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
         } else {
           $(val).attr('type', 'password');
         }
+        $('.fa-eye').toggleClass('fa-eye-slash', $(val).prop('type') === 'text');
       });
-
-      $('.fa-eye').toggleClass('fa-eye-slash', $passwordInput.prop('type') === 'text');
     });
   
     $container.on('submit', '.form-verify-email', function(event) {
