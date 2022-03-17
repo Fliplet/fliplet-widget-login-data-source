@@ -311,11 +311,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       $('.fa-eye').toggleClass('fa-eye-slash', $passwordInput.prop('type') === 'text');
     });
-
-    $container.on('click', '.fa-eye', function() {  
-      $passwordInput.attr('type', $passwordInput.prop('type') === 'password' ? 'text' : 'password');
-      $('.fa-eye').toggleClass('fa-eye-slash', $passwordInput.prop('type') === 'text');
-    });
   
     $container.on('submit', '.form-verify-email', function(event) {
       event.preventDefault();
