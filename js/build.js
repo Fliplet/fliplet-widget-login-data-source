@@ -296,7 +296,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       $passwordInputs.attr('type', isPaswordShown ? 'text' : 'password');
       $showPasswordButtons.toggleClass('fa-eye-slash', isPaswordShown);
     });
-  
+
     $container.on('submit', '.form-verify-email', function(event) {
       event.preventDefault();
 
