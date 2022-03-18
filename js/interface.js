@@ -8,7 +8,6 @@ var $dataColumnsPass = $('#passColumn');
 var validInputEventName = 'interface-validate';
 var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
-
 var currentDataSource;
 var canShowPassword = data.showPassword || false;
 var initialLoadingDone = false;

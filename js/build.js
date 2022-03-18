@@ -3,7 +3,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $passwordInputs = $('.profile_password, .new-password, .confirm-password');
   var $showPasswordButtons = $('.fa-eye');
   var isPaswordShown = false;
-
   var dataSourceEntry; // Data source entry after user verify email
 
   // Do not track login related redirects
@@ -19,7 +18,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
     email: '',
     createdAt: null
   };
-
   var CODE_VALID = 30;
   var APP_NAME = Fliplet.Env.get('appName');
   var APP_VALIDATION_DATA_DIRECTORY_ID = parseInt(data.dataSource, 10);
