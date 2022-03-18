@@ -30,10 +30,23 @@ img {
   position: relative;
 }
 
+.fl-new-password,
+.fl-confirm-password {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 input.form-control {
   height: 45px;
   box-shadow: none;
   -webkit-appearance: none;
+}
+
+.fa-eye {
+  position: absolute;
+  top: 15px;
+  right: 30px;
+  display: inline-block;
 }
 
 .fl-login-form .fl-email:before {

@@ -8,10 +8,12 @@ var $dataColumnsPass = $('#passColumn');
 var validInputEventName = 'interface-validate';
 var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
-
 var currentDataSource;
+var canShowPassword = data.showPassword || false;
 var initialLoadingDone = false;
 var defaultExpireTimeout = 2880;
+
+$('.password-show-checkbox').prop('checked', canShowPassword);
 
 var defaultEmailTemplate = $('#email-template-default').html();
 
@@ -147,6 +149,7 @@ function initDataSourceProvider(currentDataSourceId) {
 
         $('#select-email-field').toggleClass('hidden', !dataSource.id);
         $('#select-pass-field').toggleClass('hidden', !dataSource.id);
+        $('#show-password-checkbox').toggleClass('hidden', !dataSource.id);
       }
     }
   });
@@ -187,6 +190,7 @@ function setReadableExpirePeriod(value) {
 function convertTimeToMinutes() {
   var inputValue = $('#expire-timeout').val();
   var selectValue = $('#time-value').val();
+
   return inputValue * selectValue;
 }
 
@@ -211,10 +215,14 @@ function checkSecurityRules() {
 }
 
 function save(notifyComplete) {
+  canShowPassword = $('.password-show-checkbox').is(':checked');
+  data.showPassword = canShowPassword;
+
   // Get and save values to data
   _.forEach(fields, function(fieldId) {
     if (fieldId === 'expireTimeout') {
       data[fieldId] = $('#expire-timeout').val() ? convertTimeToMinutes() : defaultExpireTimeout;
+
       return;
     }
 
@@ -239,6 +247,7 @@ function save(notifyComplete) {
         matchColumn: data.emailColumn
       }
     };
+
     definition.validation = validation;
 
     // Update definition to make sure the password never gets sent
@@ -253,6 +262,7 @@ function save(notifyComplete) {
 
     // Update data source definitions
     var options = { id: data.dataSource, definition: definition };
+
     updateDataSource = Fliplet.DataSources.update(options);
   }
 
@@ -288,6 +298,7 @@ function syncTempColumns(columnType) {
 $('#emailColumn, #passColumn').on('change', function() {
   var selectedValue = $(this).val();
   var selectedText = $(this).find('option:selected').text();
+
   $(this).parents('.select-proxy-display').find('.select-value-proxy').html(selectedText);
 
   syncTempColumns($(this).attr('id'));

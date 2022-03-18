@@ -1,6 +1,8 @@
 Fliplet.Widget.instance('login-ds', function(data) {
   var $container = $(this);
-
+  var $passwordInputs = $('.profile_password, .new-password, .confirm-password');
+  var $showPasswordButtons = $('.fa-eye');
+  var isPaswordShown = false;
   var dataSourceEntry; // Data source entry after user verify email
 
   // Do not track login related redirects
@@ -16,7 +18,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
     email: '',
     createdAt: null
   };
-
   var CODE_VALID = 30;
   var APP_NAME = Fliplet.Env.get('appName');
   var APP_VALIDATION_DATA_DIRECTORY_ID = parseInt(data.dataSource, 10);
@@ -282,6 +283,16 @@ Fliplet.Widget.instance('login-ds', function(data) {
           $container.find('.state[data-state=verify-email]').removeClass('future').addClass('start');
         });
       }
+    });
+
+    $passwordInputs.on('input', function(event) {
+      $($(event.target).next('.fa-eye')).toggleClass('invisible', !data.showPassword || !$(event.target).val());
+    });
+
+    $showPasswordButtons.on('click', function() {
+      isPaswordShown = !isPaswordShown;
+      $passwordInputs.attr('type', isPaswordShown ? 'text' : 'password');
+      $showPasswordButtons.toggleClass('fa-eye-slash', isPaswordShown);
     });
 
     $container.on('submit', '.form-verify-email', function(event) {

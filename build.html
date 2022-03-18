@@ -16,6 +16,7 @@
         <div class="form-group clearfix">
           <div class="col-sm-12 fl-password">
             <input type="password" class="form-control profile_password focus-outline" name="Password" placeholder="Enter your password" autocomplete="new-password" />
+            <i class="fa fa-eye invisible"></i>
           </div>
         </div>
 
@@ -77,8 +78,14 @@
       <form class="form-horizontal form-reset-password">
         <p class="instruction">Enter your new password below.</p>
         <div class="input-wrapper">
-          <input type="password" class="form-control new-password focus-outline" placeholder="Enter your new password" autocomplete="new-password" />
-          <input type="password" class="form-control confirm-password focus-outline" placeholder="Confirm your new password" autocomplete="new-password" />
+          <div class="col-sm-12 fl-new-password">
+            <input type="password" class="form-control new-password focus-outline" placeholder="Enter your new password" autocomplete="new-password" />
+            <i class="fa fa-eye invisible"></i>
+          </div>
+          <div class="col-sm-12 fl-confirm-password">
+            <input type="password" class="form-control confirm-password focus-outline" placeholder="Confirm your new password" autocomplete="new-password" />
+            <i class="fa fa-eye invisible"></i>
+          </div>
         </div>
         <p class="text-danger reset-password-error hidden">Passwords don't match. Please try again.</p>
         <p><button class="btn btn-primary update-password focus-outline" tabindex="0" type="submit">
