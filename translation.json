@@ -13,6 +13,7 @@
         "restore": {
           "instruction": "To reset your password you must verify your email address.",
           "emailNotFound": "Your email address cannot be found. Please try again.",
+          "emailMismatch": "Please enter a valid email address and try again.",
           "back": "Back to Login",
           "action": "Verify email",
           "hasVerificationCode": "I have a verification code"
