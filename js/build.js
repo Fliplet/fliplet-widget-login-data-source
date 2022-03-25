@@ -310,7 +310,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         _this.removeClass('loading');
         _this.find('.btn-label').removeClass('hidden');
         _this.find('.loader').removeClass('show');
-        $container.find('.reset-email-error').html('Please enter a valid email address and try again.').removeClass('hidden');
+        $container.find('.reset-email-error').html(T('widgets.login.dataSource.restore.emailMismatch')).removeClass('hidden');
         $container.find('.state[data-state=verify-email] .form-group').addClass('has-error');
         calculateElHeight($container.find('.state[data-state=verify-email]'));
 
