@@ -1,5 +1,9 @@
 Fliplet.Widget.instance('login-ds', function(data) {
+  window.userDataPV = window.userDataPV || {};
+
   var $container = $(this);
+  var userDataPV;
+  var resetEmail;
 
   $(this).translate();
 
@@ -12,19 +16,10 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
   this.pvName = 'login_data_source_component_' + Fliplet.Env.get('appId');
 
-  var dataStructure = {
-    auth_token: '',
-    id: '',
-    email: '',
-    createdAt: null
-  };
-
   var CODE_VALID = 30;
-  var APP_NAME = Fliplet.Env.get('appName');
   var APP_VALIDATION_DATA_DIRECTORY_ID = parseInt(data.dataSource, 10);
   var DATA_DIRECTORY_EMAIL_COLUMN = data.emailColumn;
   var DATA_DIRECTORY_PASS_COLUMN = data.passColumn;
-  var ORG_NAME = Fliplet.Env.get('organizationName');
 
   if (Fliplet.Navigate.query.error) {
     $container.find('.login-error').html(Fliplet.Navigate.query.error).removeClass('hidden');
@@ -295,7 +290,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       _this.find('.btn-label').addClass('hidden');
       _this.find('.loader').addClass('show');
 
-      window.resetEmail = $container.find('input.reset-email-field').val().toLowerCase(); // Get email for reset
+      resetEmail = $container.find('input.reset-email-field').val().toLowerCase(); // Get email for reset
 
       $container.find('.reset-email-error').addClass('hidden');
 
@@ -446,7 +441,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
                     });
                   });
                 })
-                .catch(function(error) {
+                .catch(function() {
                   $container.find('.state[data-state=verify-code] .form-group').addClass('has-error');
                   $container.find('.resend-code').removeClass('hidden');
                   _this.removeClass('loading');
@@ -497,9 +492,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       Fliplet.Session.get().then(function(session) {
         if (session.entries && session.entries.dataSource) {
-          entryId = 'session'; // this works because you can use it as an ID on the backend
-          entry = session.entries.dataSource;
-
           return Fliplet.DataSources.connect(data.dataSource, { offline: false }).then(function(dataSource) {
             var options = {
               type: 'update',
@@ -595,13 +587,13 @@ Fliplet.Widget.instance('login-ds', function(data) {
             })
             .catch(function(error) {
               console.error('Error resending code', error);
-              $container.find('.pin-sent-error').text(CONTACT_UNREACHABLE).removeClass('hidden');
+              $container.find('.pin-sent-error').text(Fliplet.parseError(error)).removeClass('hidden');
             });
         });
     });
   }
 
-  function setUserDataPV(success_callback, fail_callback) {
+  function setUserDataPV(successCallback, failCallback) {
     var structure = {
       resetVerified: false,
       code: '',
@@ -610,11 +602,10 @@ Fliplet.Widget.instance('login-ds', function(data) {
       userLogged: false
     };
 
-    window.pvName = 'login-data-source';
-    Fliplet.Security.Storage.create(pvName, structure).then(function(data) {
-      window.userDataPV = data;
-      success_callback();
-    }, fail_callback);
+    Fliplet.Security.Storage.create('login-data-source', structure).then(function(data) {
+      userDataPV = data;
+      successCallback();
+    }, failCallback);
   }
 
   Fliplet().then(function() {
