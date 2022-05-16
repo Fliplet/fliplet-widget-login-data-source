@@ -1,5 +1,11 @@
 Fliplet.Widget.instance('login-ds', function(data) {
+  window.userDataPV = window.userDataPV || {};
+
   var $container = $(this);
+  var userDataPV;
+  var resetEmail;
+
+  $(this).translate();
 
   var dataSourceEntry; // Data source entry after user verify email
 
@@ -10,19 +16,10 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
   this.pvName = 'login_data_source_component_' + Fliplet.Env.get('appId');
 
-  var dataStructure = {
-    auth_token: '',
-    id: '',
-    email: '',
-    createdAt: null
-  };
-
   var CODE_VALID = 30;
-  var APP_NAME = Fliplet.Env.get('appName');
   var APP_VALIDATION_DATA_DIRECTORY_ID = parseInt(data.dataSource, 10);
   var DATA_DIRECTORY_EMAIL_COLUMN = data.emailColumn;
   var DATA_DIRECTORY_PASS_COLUMN = data.passColumn;
-  var ORG_NAME = Fliplet.Env.get('organizationName');
 
   if (Fliplet.Navigate.query.error) {
     $container.find('.login-error').html(Fliplet.Navigate.query.error).removeClass('hidden');
@@ -41,7 +38,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         Fliplet.User.getCachedSession()
           .then(function(session) {
             if (!session || !session.accounts) {
-              return Promise.reject('Login session not found');
+              return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
             }
 
             var dataSource = session.accounts.dataSource || [];
@@ -50,7 +47,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
             });
 
             if (!verifiedAccounts.length) {
-              return Promise.reject('Login session not found');
+              return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
             }
 
             // Update stored email address based on retrieved session
@@ -73,7 +70,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
           })
           .then(function() {
             if (typeof data.loginAction === 'undefined') {
-              return Promise.reject('Screen redirect is not set up.');
+              return Promise.reject(T('widgets.login.dataSource.errors.redirectMissing'));
             }
 
             var navigate = Fliplet.Navigate.to(data.loginAction);
@@ -163,7 +160,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         _this.find('.btn-label').removeClass('hidden');
         _this.find('.loader').removeClass('show');
         // Show error
-        _this.find('.login-error').html('Please enter a valid email.').removeClass('hidden');
+        _this.find('.login-error').html(T('widgets.login.dataSource.errors.emailInvalid')).removeClass('hidden');
 
         return;
       }
@@ -224,11 +221,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
               type: 'regular',
               duration: false,
               tapToDismiss: false,
-              title: 'Login successful',
-              message: 'To test security features in Fliplet Studio, go to “Preview > Enable security” to enable security.',
+              title: T('widgets.login.dataSource.successToast.title'),
+              message: T('widgets.login.dataSource.successToast.message'),
               actions: [
                 {
-                  label: 'OK',
+                  label: T('widgets.login.dataSource.successToast.ok'),
                   action: function() {
                     Fliplet.UI.Toast.dismiss();
                   }
@@ -238,7 +235,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
           }
 
           if (typeof data.loginAction === 'undefined') {
-            return Fliplet.UI.Toast('Login successful');
+            return Fliplet.UI.Toast(T('widgets.login.dataSource.successToast.title'));
           }
 
           return Fliplet.Navigate.to(data.loginAction);
@@ -293,7 +290,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       _this.find('.btn-label').addClass('hidden');
       _this.find('.loader').addClass('show');
 
-      window.resetEmail = $container.find('input.reset-email-field').val().toLowerCase(); // Get email for reset
+      resetEmail = $container.find('input.reset-email-field').val().toLowerCase(); // Get email for reset
 
       $container.find('.reset-email-error').addClass('hidden');
 
@@ -308,7 +305,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         _this.removeClass('loading');
         _this.find('.btn-label').removeClass('hidden');
         _this.find('.loader').removeClass('show');
-        $container.find('.reset-email-error').html('Please enter a valid email address and try again.').removeClass('hidden');
+        $container.find('.reset-email-error').html(T('widgets.login.dataSource.restore.emailMismatch')).removeClass('hidden');
         $container.find('.state[data-state=verify-email] .form-group').addClass('has-error');
         calculateElHeight($container.find('.state[data-state=verify-email]'));
 
@@ -444,7 +441,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
                     });
                   });
                 })
-                .catch(function(error) {
+                .catch(function() {
                   $container.find('.state[data-state=verify-code] .form-group').addClass('has-error');
                   $container.find('.resend-code').removeClass('hidden');
                   _this.removeClass('loading');
@@ -472,11 +469,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
       var error = '';
 
       if (!newPassword || !confirmPassword) {
-        error = 'Enter a new password and confirm. Try again.';
+        error = T('widgets.login.dataSource.errors.newPasswordMissing');
       }
 
       if (newPassword !== confirmPassword) {
-        error = 'Passwords don\'t match. Please try again.';
+        error = T('widgets.login.dataSource.errors.passwordMismatch');
       }
 
       if (error) {
@@ -495,9 +492,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       Fliplet.Session.get().then(function(session) {
         if (session.entries && session.entries.dataSource) {
-          entryId = 'session'; // this works because you can use it as an ID on the backend
-          entry = session.entries.dataSource;
-
           return Fliplet.DataSources.connect(data.dataSource, { offline: false }).then(function(dataSource) {
             var options = {
               type: 'update',
@@ -512,7 +506,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
             return dataSource.query(options)
               .then(function onPasswordUpdateSuccess(affected) {
                 if (!affected || !affected.length) {
-                  return Promise.reject('Account not found for: ' + resetEmail);
+                  return Promise.reject(T('widgets.login.dataSource.errors.accountNotFound', { email: resetEmail }));
                 }
 
                 _this.removeClass('loading');
@@ -524,12 +518,12 @@ Fliplet.Widget.instance('login-ds', function(data) {
                 $container.find('.state[data-state=all-done]').removeClass('future').addClass('present');
               })
               .catch(function onPasswordUpdateError(error) {
-                // Query failed due to some datasource missconfiguration or access denied
+                // Query failed due to some data source misconfiguration or access denied
                 _this.removeClass('loading');
                 _this.find('.btn-label').removeClass('hidden');
                 _this.find('.loader').removeClass('show');
 
-                $container.find('.reset-password-error').html(Fliplet.parseError(error) || 'Something went wrong! Try again.');
+                $container.find('.reset-password-error').html(Fliplet.parseError(error) || T('widgets.login.dataSource.errors.unknown'));
                 $container.find('.reset-password-error').removeClass('hidden');
               });
           });
@@ -554,7 +548,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         $container.find('.authenticate').find('.btn-label').removeClass('hidden');
         $container.find('.authenticate').find('.loader').removeClass('show');
 
-        $container.find('.reset-email-error').html('You need to verify your email first.').removeClass('hidden');
+        $container.find('.reset-email-error').html(T('widgets.login.dataSource.errors.verifyEmailFirst')).removeClass('hidden');
         $container.find('.state[data-state=verify-email] .form-group').addClass('has-error');
 
         calculateElHeight($container.find('.state[data-state=verify-email]'));
@@ -593,13 +587,13 @@ Fliplet.Widget.instance('login-ds', function(data) {
             })
             .catch(function(error) {
               console.error('Error resending code', error);
-              $container.find('.pin-sent-error').text(CONTACT_UNREACHABLE).removeClass('hidden');
+              $container.find('.pin-sent-error').text(Fliplet.parseError(error)).removeClass('hidden');
             });
         });
     });
   }
 
-  function setUserDataPV(success_callback, fail_callback) {
+  function setUserDataPV(successCallback, failCallback) {
     var structure = {
       resetVerified: false,
       code: '',
@@ -608,11 +602,10 @@ Fliplet.Widget.instance('login-ds', function(data) {
       userLogged: false
     };
 
-    window.pvName = 'login-data-source';
-    Fliplet.Security.Storage.create(pvName, structure).then(function(data) {
-      window.userDataPV = data;
-      success_callback();
-    }, fail_callback);
+    Fliplet.Security.Storage.create('login-data-source', structure).then(function(data) {
+      userDataPV = data;
+      successCallback();
+    }, failCallback);
   }
 
   Fliplet().then(function() {
