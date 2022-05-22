@@ -4,6 +4,25 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $container = $(this);
   var userDataPV;
   var resetEmail;
+  var isValidPassword;
+  var $newPasswordInput = $('.new-password');
+  var $confirmPasswordInput = $('.confirm-password');
+  var $newPasswordChecker = $('.panel.password-checker');
+  var $confirmPasswordChecker = $('.password-confirmation');
+  var $passwordLengthCkecker = $('.password-lenght');
+  var $passwordUppercaseCkecker = $('.password-uppercase');
+  var $passwordLowercaseCkecker = $('.password-lowercase');
+  var $passwordNumberCkecker = $('.password-number');
+  var $passwordSpecialCkecker = $('.password-special');
+
+  var passwordMinLength = /.{8,}/;
+
+  var rules = {
+    isUppercase: /[A-Z]/,
+    isLowercase: /[a-z]/,
+    isNumber: /[0-9]/,
+    isSpecial: /[^A-Za-z0-9]/
+  };
 
   $(this).translate();
 
@@ -23,6 +42,25 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
   if (Fliplet.Navigate.query.error) {
     $container.find('.login-error').html(Fliplet.Navigate.query.error).removeClass('hidden');
+  }
+
+  function validatePassword() {
+    var passwordValue = $newPasswordInput.val().trim();
+    var isValid = true;
+
+    $passwordLengthCkecker.attr('checked', passwordMinLength.test(passwordValue));
+    $passwordUppercaseCkecker.attr('checked', rules.isUppercase.test(passwordValue));
+    $passwordLowercaseCkecker.attr('checked', rules.isLowercase.test(passwordValue));
+    $passwordNumberCkecker.attr('checked', rules.isNumber.test(passwordValue));
+    $passwordSpecialCkecker.attr('checked', rules.isSpecial.test(passwordValue));
+
+    _.forEach(rules, function(value) {
+      if (!value.test(passwordValue)) {
+        isValid = false;
+      }
+    });
+
+    isValidPassword = isValid;
   }
 
   function initEmailValidation() {
@@ -257,6 +295,35 @@ Fliplet.Widget.instance('login-ds', function(data) {
     // EVENT LISTENER FOR FORGET PASSWORD RESET
     // Just switches views Login to Email verification
     // Leave as it is
+    $newPasswordInput.on('focus', function() {
+      $newPasswordChecker.removeClass('hidden');
+      calculateElHeight($('.state.present'));
+    }).on('blur', function() {
+      if (!$newPasswordInput.val()) {
+        $newPasswordChecker.addClass('hidden');
+        calculateElHeight($('.state.present'));
+      }
+    });
+
+    $confirmPasswordInput.on('focus', function() {
+      $confirmPasswordChecker.removeClass('hidden');
+      calculateElHeight($('.state.present'));
+    }).on('blur', function() {
+      if (!$confirmPasswordInput.val()) {
+        $confirmPasswordChecker.addClass('hidden');
+        calculateElHeight($('.state.present'));
+      }
+    }).on('input', function() {
+      var password = $newPasswordInput.val();
+      var confirmation = $confirmPasswordInput.val();
+
+      $('.password-confirmation-check').attr('checked', confirmation === password && confirmation);
+    });
+
+    $newPasswordInput.on('input', function() {
+      validatePassword();
+    });
+
     $container.on('click keydown', '.btn-forget-pass', function(event) {
       if (event.type === 'click' || event.which === 32 || event.which === 13) {
         $container.find('.fl-login-holder').fadeOut(100, function() {
@@ -458,6 +525,14 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $container.on('submit', '.form-reset-password', function(event) {
       event.preventDefault();
 
+      if (!isValidPassword) {
+        $newPasswordChecker.addClass('panel-danger');
+
+        return;
+      }
+
+      $newPasswordChecker.removeClass('panel-danger');
+
       var _this = $(this).find('.update-password');
 
       _this.addClass('loading');
@@ -473,6 +548,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       }
 
       if (newPassword !== confirmPassword) {
+        $confirmPasswordChecker.addClass('panel-danger');
         error = T('widgets.login.dataSource.errors.passwordMismatch');
       }
 
@@ -489,6 +565,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
         return;
       }
+
+      $confirmPasswordChecker.removeClass('panel-danger');
 
       Fliplet.Session.get().then(function(session) {
         if (session.entries && session.entries.dataSource) {

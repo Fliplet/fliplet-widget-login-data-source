@@ -80,7 +80,59 @@
           <p class="instruction" data-translate="widgets.login.dataSource.reset.instruction">Enter your new password below.</p>
           <div class="input-wrapper">
             <input type="password" class="form-control new-password focus-outline" data-translate="[placeholder]widgets.login.dataSource.reset.newPasswordPlaceholder" placeholder="Enter your new password" autocomplete="new-password" />
+            <div class="panel password-checker hidden">
+              <div class="panel-heading">Password requirements</div>
+              <div class="panel-body">
+                <div class="requirement">
+                  <input type="checkbox" class="hidden password-lenght" readonly="readonly" tabindex="-1" />
+                  <label class="requirement-marker">
+                    <i class="fa fa-check"></i>
+                  </label>
+                  <span>Password must be at least 8 characters.</span>
+                </div>
+                <div class="requirement">
+                  <input type="checkbox" class="hidden password-uppercase" readonly="readonly" tabindex="-1"/>
+                  <label class="requirement-marker">
+                    <i class="fa fa-check"></i>
+                  </label>
+                  <span>Password must contain at least 1 uppercase character.</span>
+                </div>
+                <div class="requirement">
+                  <input type="checkbox" class="hidden password-lowercase" readonly="readonly" tabindex="-1" />
+                  <label class="requirement-marker">
+                    <i class="fa fa-check"></i>
+                  </label>
+                  <span>Password must contain at least 1 lowercase character.</span>
+                </div>
+                <div class="requirement">
+                  <input type="checkbox" class="hidden password-number" readonly="readonly" tabindex="-1" />
+                  <label class="requirement-marker">
+                    <i class="fa fa-check"></i>
+                  </label>
+                  <span>Password must contain at least 1 number.</span>
+                </div>
+                <div class="requirement">
+                  <input type="checkbox" class="hidden password-special" readonly="readonly" tabindex="-1" />
+                  <label class="requirement-marker">
+                    <i class="fa fa-check"></i>
+                  </label>
+                  <span>Password must contain at least 1 symbol.</span>
+                </div>
+              </div>
+            </div>
             <input type="password" class="form-control confirm-password focus-outline" data-translate="[placeholder]widgets.login.dataSource.reset.confirmPasswordPlaceholder" placeholder="Confirm your new password" autocomplete="new-password" />
+            <div class="panel password-checker password-confirmation hidden">
+              <div class="panel-heading">Password confirmation</div>
+              <div class="panel-body">
+                <div class="requirement">
+                  <input type="checkbox" class="hidden password-confirmation-check" readonly="readonly" tabindex="-1" />
+                  <label class="requirement-marker">
+                    <i class="fa fa-check"></i>
+                  </label>
+                  <span>Password confirmation must match.</span>
+                </div>
+              </div>
+            </div>
           </div>
           <p class="text-danger reset-password-error hidden" data-translate="widgets.login.dataSource.reset.mismatch">Passwords don't match. Please try again.</p>
           <p><button class="btn btn-primary update-password focus-outline" tabindex="0" type="submit">
