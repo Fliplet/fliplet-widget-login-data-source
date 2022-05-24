@@ -14,10 +14,10 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $passwordLowercaseCkecker = $('.password-lowercase');
   var $passwordNumberCkecker = $('.password-number');
   var $passwordSpecialCkecker = $('.password-special');
-
-  var passwordMinLength = /.{8,}/;
+  var $passwordConfirmChecker = $('.password-confirmation-check');
 
   var rules = {
+    passwordMinLength: /.{8,}/,
     isUppercase: /[A-Z]/,
     isLowercase: /[a-z]/,
     isNumber: /[0-9]/,
@@ -48,7 +48,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     var passwordValue = $newPasswordInput.val().trim();
     var isValid = true;
 
-    $passwordLengthCkecker.attr('checked', passwordMinLength.test(passwordValue));
+    $passwordLengthCkecker.attr('checked', rules.passwordMinLength.test(passwordValue));
     $passwordUppercaseCkecker.attr('checked', rules.isUppercase.test(passwordValue));
     $passwordLowercaseCkecker.attr('checked', rules.isLowercase.test(passwordValue));
     $passwordNumberCkecker.attr('checked', rules.isNumber.test(passwordValue));
@@ -317,10 +317,15 @@ Fliplet.Widget.instance('login-ds', function(data) {
       var password = $newPasswordInput.val();
       var confirmation = $confirmPasswordInput.val();
 
-      $('.password-confirmation-check').attr('checked', confirmation === password && confirmation);
+      $passwordConfirmChecker.attr('checked', confirmation === password && !!confirmation);
     });
 
     $newPasswordInput.on('input', function() {
+      var password = $newPasswordInput.val();
+      var confirmation = $confirmPasswordInput.val();
+
+      $passwordConfirmChecker.attr('checked', confirmation === password && !!confirmation);
+
       validatePassword();
     });
 
