@@ -286,7 +286,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     });
 
     $passwordInput.on('input', function(event) {
-      $(event.target).next('.fa-eye').toggleClass('invisible', !data.showPassword || !$(event.target).val());
+      $(event.target).next('.fa-eye').toggleClass('hidden', !data.showPassword || !$(event.target).val());
     });
 
     $showPasswordButton.on('click', function() {
