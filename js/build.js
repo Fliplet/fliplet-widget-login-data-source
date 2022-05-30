@@ -5,8 +5,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var userDataPV;
   var resetEmail;
 
-  $(this).translate();
-
   var dataSourceEntry; // Data source entry after user verify email
 
   // Do not track login related redirects
@@ -26,66 +24,64 @@ Fliplet.Widget.instance('login-ds', function(data) {
   }
 
   function initEmailValidation() {
-    Fliplet.Navigator.onReady().then(function() {
-      Fliplet.Security.Storage.init().then(function() {
-        attachEventListeners();
-        setUserDataPV(function() {}, function() {});
-      });
-
-      // New logic to redirect
-      // Check if user is already verified
-      if (!Fliplet.Env.get('disableSecurity')) {
-        Fliplet.User.getCachedSession()
-          .then(function(session) {
-            if (!session || !session.accounts) {
-              return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
-            }
-
-            var dataSource = session.accounts.dataSource || [];
-            var verifiedAccounts = dataSource.filter(function(dataSourceAccount) {
-              return dataSourceAccount.dataSourceId === APP_VALIDATION_DATA_DIRECTORY_ID;
-            });
-
-            if (!verifiedAccounts.length) {
-              return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
-            }
-
-            // Update stored email address based on retrieved session
-            var entry = verifiedAccounts[0];
-            var email = entry.data[DATA_DIRECTORY_EMAIL_COLUMN];
-            var user = createUserProfile(entry);
-
-            return Promise.all([
-              Fliplet.App.Storage.set({
-                'fl-chat-source-id': entry.dataSourceId,
-                'fl-chat-auth-email': email,
-                'fl-login-data-source': entry
-              }),
-              Fliplet.Profile.set({
-                'email': email,
-                'user': user
-              }),
-              Fliplet.Security.Storage.update()
-            ]);
-          })
-          .then(function() {
-            if (typeof data.loginAction === 'undefined') {
-              return Promise.reject(T('widgets.login.dataSource.errors.redirectMissing'));
-            }
-
-            var navigate = Fliplet.Navigate.to(data.loginAction);
-
-            if (typeof navigate === 'object' && typeof navigate.then === 'function') {
-              return navigate;
-            }
-
-            return Promise.resolve();
-          })
-          .catch(function(error) {
-            console.warn(error);
-          });
-      }
+    Fliplet.Security.Storage.init().then(function() {
+      attachEventListeners();
+      setUserDataPV(function() {}, function() {});
     });
+
+    // New logic to redirect
+    // Check if user is already verified
+    if (!Fliplet.Env.get('disableSecurity')) {
+      Fliplet.User.getCachedSession()
+        .then(function(session) {
+          if (!session || !session.accounts) {
+            return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
+          }
+
+          var dataSource = session.accounts.dataSource || [];
+          var verifiedAccounts = dataSource.filter(function(dataSourceAccount) {
+            return dataSourceAccount.dataSourceId === APP_VALIDATION_DATA_DIRECTORY_ID;
+          });
+
+          if (!verifiedAccounts.length) {
+            return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
+          }
+
+          // Update stored email address based on retrieved session
+          var entry = verifiedAccounts[0];
+          var email = entry.data[DATA_DIRECTORY_EMAIL_COLUMN];
+          var user = createUserProfile(entry);
+
+          return Promise.all([
+            Fliplet.App.Storage.set({
+              'fl-chat-source-id': entry.dataSourceId,
+              'fl-chat-auth-email': email,
+              'fl-login-data-source': entry
+            }),
+            Fliplet.Profile.set({
+              'email': email,
+              'user': user
+            }),
+            Fliplet.Security.Storage.update()
+          ]);
+        })
+        .then(function() {
+          if (typeof data.loginAction === 'undefined') {
+            return Promise.reject(T('widgets.login.dataSource.errors.redirectMissing'));
+          }
+
+          var navigate = Fliplet.Navigate.to(data.loginAction);
+
+          if (typeof navigate === 'object' && typeof navigate.then === 'function') {
+            return navigate;
+          }
+
+          return Promise.resolve();
+        })
+        .catch(function(error) {
+          console.warn(error);
+        });
+    }
   }
 
   function validateEmail(email) {
@@ -609,6 +605,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
   }
 
   Fliplet().then(function() {
+    $container.translate();
+
     initEmailValidation();
 
     if (Fliplet.Env.get('interact')) {
