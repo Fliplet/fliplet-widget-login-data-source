@@ -43,8 +43,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
   }
 
   function validatePassword() {
-    var passwordValue = $newPasswordInput.val().trim();
-    var isValid = true;
+    var passwordValue = $newPasswordInput.val();
 
     $passwordLengthCkecker.attr('checked', rules.passwordMinLength.test(passwordValue));
     $passwordUppercaseCkecker.attr('checked', rules.isUppercase.test(passwordValue));
@@ -52,13 +51,18 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $passwordNumberCkecker.attr('checked', rules.isNumber.test(passwordValue));
     $passwordSpecialCkecker.attr('checked', rules.isSpecial.test(passwordValue));
 
-    _.forEach(rules, function(value) {
-      if (!value.test(passwordValue)) {
-        isValid = false;
-      }
+    var isInvalid = _.some(rules, function(value) {
+      return !value.test(passwordValue);
     });
 
-    isValidPassword = isValid;
+    isValidPassword = !isInvalid;
+  }
+
+  function validatePasswordConfirmation() {
+    var password = $newPasswordInput.val();
+    var confirmation = $confirmPasswordInput.val();
+
+    $passwordConfirmChecker.attr('checked', confirmation === password && !!confirmation);
   }
 
   function initEmailValidation() {
@@ -310,10 +314,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
         calculateElHeight($('.state.present'));
       }
     }).on('input', function() {
-      var password = $newPasswordInput.val();
-      var confirmation = $confirmPasswordInput.val();
-
-      $passwordConfirmChecker.attr('checked', confirmation === password && !!confirmation);
+      validatePasswordConfirmation();
     });
 
     $newPasswordInput.on('input', function() {
