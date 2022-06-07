@@ -1,5 +1,9 @@
 Fliplet.Widget.instance('login-ds', function(data) {
+  window.userDataPV = window.userDataPV || {};
+
   var $container = $(this);
+  var userDataPV = window.userDataPV;
+  var resetEmail;
 
   var dataSourceEntry; // Data source entry after user verify email
 
@@ -293,7 +297,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
       _this.find('.btn-label').addClass('hidden');
       _this.find('.loader').addClass('show');
 
-      window.resetEmail = $container.find('input.reset-email-field').val().toLowerCase(); // Get email for reset
+      resetEmail = $container.find('input.reset-email-field').val().toLowerCase(); // Get email for reset
 
       $container.find('.reset-email-error').addClass('hidden');
 
@@ -593,7 +597,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
             })
             .catch(function(error) {
               console.error('Error resending code', error);
-              $container.find('.pin-sent-error').text(CONTACT_UNREACHABLE).removeClass('hidden');
+              $container.find('.pin-sent-error').text(Fliplet.parseError(error)).removeClass('hidden');
             });
         });
     });
@@ -608,9 +612,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
       userLogged: false
     };
 
-    window.pvName = 'login-data-source';
-    Fliplet.Security.Storage.create(pvName, structure).then(function(data) {
-      window.userDataPV = data;
+    Fliplet.Security.Storage.create('login-data-source', structure).then(function(data) {
+      userDataPV = data;
       success_callback();
     }, fail_callback);
   }
