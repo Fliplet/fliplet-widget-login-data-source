@@ -9,7 +9,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $confirmPasswordInput = $('.confirm-password');
   var $newPasswordChecker = $('.panel.password-checker');
   var $confirmPasswordChecker = $('.password-confirmation');
-  var $passwordLengthCkecker = $('.password-lenght');
+  var $passwordLengthCkecker = $('.password-length');
   var $passwordUppercaseCkecker = $('.password-uppercase');
   var $passwordLowercaseCkecker = $('.password-lowercase');
   var $passwordNumberCkecker = $('.password-number');
@@ -318,12 +318,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
     });
 
     $newPasswordInput.on('input', function() {
-      var password = $newPasswordInput.val();
-      var confirmation = $confirmPasswordInput.val();
-
-      $passwordConfirmChecker.attr('checked', confirmation === password && !!confirmation);
-
       validatePassword();
+      validatePasswordConfirmation();
     });
 
     $container.on('click keydown', '.btn-forget-pass', function(event) {
