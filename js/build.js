@@ -2,7 +2,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
   window.userDataPV = window.userDataPV || {};
 
   var $container = $(this);
-  var userDataPV;
+  var userDataPV = window.userDataPV;
   var resetEmail;
 
   var dataSourceEntry; // Data source entry after user verify email
