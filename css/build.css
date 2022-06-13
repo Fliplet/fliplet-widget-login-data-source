@@ -36,7 +36,7 @@ input.form-control {
   -webkit-appearance: none;
 }
 
-.fa-eye {
+[data-widget-package="com.fliplet.login-data-source"] .fa-eye {
   position: absolute;
   top: 15px;
   right: 30px;

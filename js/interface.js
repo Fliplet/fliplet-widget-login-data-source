@@ -9,11 +9,10 @@ var validInputEventName = 'interface-validate';
 var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
 var currentDataSource;
-var canShowPassword = data.showPassword || false;
 var initialLoadingDone = false;
 var defaultExpireTimeout = 2880;
 
-$('.password-show-checkbox').prop('checked', canShowPassword);
+$('.password-show-checkbox').prop('checked', data.showPassword || false);
 
 var defaultEmailTemplate = $('#email-template-default').html();
 
@@ -215,8 +214,7 @@ function checkSecurityRules() {
 }
 
 function save(notifyComplete) {
-  canShowPassword = $('.password-show-checkbox').is(':checked');
-  data.showPassword = canShowPassword;
+  data.showPassword = $('.password-show-checkbox').is(':checked');
 
   // Get and save values to data
   _.forEach(fields, function(fieldId) {
