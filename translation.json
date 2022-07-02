@@ -1,0 +1,57 @@
+{
+  "widgets": {
+    "login": {
+      "dataSource": {
+        "login": {
+          "instruction": "Enter your access details below",
+          "emailPlaceholder": "Enter your email",
+          "passwordPlaceholder": "Enter your password",
+          "mismatch": "The details you entered don’t match our records. Please try again.",
+          "action": "Log in",
+          "forgotPassword": "Forgot your password?"
+        },
+        "restore": {
+          "instruction": "To reset your password you must verify your email address.",
+          "emailNotFound": "Your email address cannot be found. Please try again.",
+          "emailMismatch": "Please enter a valid email address and try again.",
+          "back": "Back to Login",
+          "action": "Verify email",
+          "hasVerificationCode": "I have a verification code"
+        },
+        "verify": {
+          "instruction": "A verification code was sent to <span class=\"verify-user-email\"></span>.",
+          "emailPlaceholder": "Enter your email",
+          "codePlaceholder": "Enter verification code",
+          "mismatch": "You entered the wrong code or the code expired. Please try again or request a new code.",
+          "resend": "Resend verification code",
+          "action": "Verify",
+          "resendSuccess": "A new code was sent to your email."
+        },
+        "reset": {
+          "instruction": "Enter your new password below.",
+          "newPasswordPlaceholder": "Enter your new password",
+          "confirmPasswordPlaceholder": "Confirm your new password",
+          "mismatch": "Passwords don't match. Please try again.",
+          "action": "Reset password",
+          "success": "You can now login using your email address and new password"
+        },
+        "errors": {
+          "sessionNotFound": "Login session not found",
+          "redirectMissing": "Screen redirect is not set up.",
+          "emailInvalid": "Please enter a valid email.",
+          "newPasswordMissing": "Enter a new password and confirm. Try again.",
+          "passwordMismatch": "Passwords don't match. Please try again.",
+          "accountNotFound": "Account not found for: {{email}}",
+          "unknown": "Something went wrong! Try again.",
+          "verifyEmailFirst": "You need to verify your email first."
+        },
+        "loading": "Loading...",
+        "successToast": {
+          "title": "Login successful",
+          "message": "To test security features in Fliplet Studio, go to \"Preview > Enable security\" to enable security.",
+          "ok": "OK"
+        }
+      }
+    }
+  }
+}
