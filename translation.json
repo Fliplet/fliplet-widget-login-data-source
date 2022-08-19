@@ -33,7 +33,17 @@
           "confirmPasswordPlaceholder": "Confirm your new password",
           "mismatch": "Passwords don't match. Please try again.",
           "action": "Reset password",
-          "success": "You can now login using your email address and new password"
+          "success": "You can now login using your email address and new password",
+          "requirementHeading": "Password requirements",
+          "confirmHeading": "Password confirmation"
+        },
+        "validation": {
+          "minLength": "Password must be at least 8 characters.",
+          "uppercase": "Password must contain at least 1 uppercase character.",
+          "lowercase": "Password must contain at least 1 lowercase character.",
+          "number": "Password must contain at least 1 number.",
+          "symbol": "Password must contain at least 1 symbol.",
+          "confirm": "Password confirmation must match."
         },
         "errors": {
           "sessionNotFound": "Login session not found",
