@@ -601,6 +601,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
                 $container.find('.reset-password-error').html(Fliplet.parseError(error) || T('widgets.login.dataSource.errors.unknown'));
                 $container.find('.reset-password-error').removeClass('hidden');
+                calculateElHeight($container.find('.state[data-state="reset-password"]'));
               });
           });
         }
