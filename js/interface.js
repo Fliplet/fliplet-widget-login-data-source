@@ -101,11 +101,6 @@ loginActionProvider.then(function(result) {
   save(true);
 });
 
-// Function to compile a Handlebars template
-function template(name) {
-  return Handlebars.compile($('#template-' + name).html());
-}
-
 function initDataSourceProvider(currentDataSourceId) {
   var dataSourceData = {
     dataSourceTitle: 'Login data source',
@@ -187,6 +182,7 @@ function setReadableExpirePeriod(value) {
 function convertTimeToMinutes() {
   var inputValue = $('#expire-timeout').val();
   var selectValue = $('#time-value').val();
+
   return inputValue * selectValue;
 }
 
@@ -215,6 +211,7 @@ function save(notifyComplete) {
   _.forEach(fields, function(fieldId) {
     if (fieldId === 'expireTimeout') {
       data[fieldId] = $('#expire-timeout').val() ? convertTimeToMinutes() : defaultExpireTimeout;
+
       return;
     }
 
@@ -239,6 +236,7 @@ function save(notifyComplete) {
         matchColumn: data.emailColumn
       }
     };
+
     definition.validation = validation;
 
     // Update definition to make sure the password never gets sent
@@ -253,6 +251,7 @@ function save(notifyComplete) {
 
     // Update data source definitions
     var options = { id: data.dataSource, definition: definition };
+
     updateDataSource = Fliplet.DataSources.update(options);
   }
 
@@ -288,6 +287,7 @@ function syncTempColumns(columnType) {
 $('#emailColumn, #passColumn').on('change', function() {
   var selectedValue = $(this).val();
   var selectedText = $(this).find('option:selected').text();
+
   $(this).parents('.select-proxy-display').find('.select-value-proxy').html(selectedText);
 
   syncTempColumns($(this).attr('id'));
