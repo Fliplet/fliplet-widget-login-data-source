@@ -233,7 +233,8 @@ function save(notifyComplete) {
           subject: 'Validate your email address'
         },
         toColumn: data.emailColumn,
-        matchColumn: data.emailColumn
+        matchColumn: data.emailColumn,
+        passwordColumn: data.passColumn
       }
     };
 
