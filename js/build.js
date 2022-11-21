@@ -89,6 +89,10 @@ Fliplet.Widget.instance('login-ds', function(data) {
             return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
           }
 
+          if (_.get(session, 'server.passports.dataSource[0].requiresPasswordReset')) {
+            return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
+          }
+
           // Update stored email address based on retrieved session
           var entry = verifiedAccounts[0];
           var email = entry.data[DATA_DIRECTORY_EMAIL_COLUMN];
@@ -467,7 +471,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
           Fliplet.Session.get()
             .then(function() {
-              dataSource.validate({ type: 'email', where: where })
+              dataSource.validate({
+                type: 'email',
+                where: where,
+                requiresPasswordReset: true
+              })
                 .then(function(entry) {
                   dataSourceEntry = entry;
 
@@ -568,41 +576,26 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       Fliplet.Session.get().then(function(session) {
         if (session.entries && session.entries.dataSource) {
-          return Fliplet.DataSources.connect(data.dataSource, { offline: false }).then(function(dataSource) {
-            var options = {
-              type: 'update',
-              where: {},
-              dataSourceEntryId: dataSourceEntry.id,
-              data: {}
-            };
+          return Fliplet.Session.updateUserPassword({
+            newPassword: newPassword,
+            passwordColumn: data.passColumn
+          }).then(function onPasswordUpdateSuccess() {
+            _this.removeClass('loading');
+            _this.find('.btn-label').removeClass('hidden');
+            _this.find('.loader').removeClass('show');
 
-            options.where[data.emailColumn] = { $iLike: resetEmail };
-            options.data[data.passColumn] = newPassword;
+            $container.find('.state.present').removeClass('present').addClass('past');
+            calculateElHeight($container.find('.state[data-state=all-done]'));
+            $container.find('.state[data-state=all-done]').removeClass('future').addClass('present');
+          }).catch(function onPasswordUpdateError(error) {
+            // Query failed due to some data source misconfiguration or access denied
+            _this.removeClass('loading');
+            _this.find('.btn-label').removeClass('hidden');
+            _this.find('.loader').removeClass('show');
 
-            return dataSource.query(options)
-              .then(function onPasswordUpdateSuccess(affected) {
-                if (!affected || !affected.length) {
-                  return Promise.reject(T('widgets.login.dataSource.errors.accountNotFound', { email: resetEmail }));
-                }
-
-                _this.removeClass('loading');
-                _this.find('.btn-label').removeClass('hidden');
-                _this.find('.loader').removeClass('show');
-
-                $container.find('.state.present').removeClass('present').addClass('past');
-                calculateElHeight($container.find('.state[data-state=all-done]'));
-                $container.find('.state[data-state=all-done]').removeClass('future').addClass('present');
-              })
-              .catch(function onPasswordUpdateError(error) {
-                // Query failed due to some data source misconfiguration or access denied
-                _this.removeClass('loading');
-                _this.find('.btn-label').removeClass('hidden');
-                _this.find('.loader').removeClass('show');
-
-                $container.find('.reset-password-error').html(Fliplet.parseError(error) || T('widgets.login.dataSource.errors.unknown'));
-                $container.find('.reset-password-error').removeClass('hidden');
-                calculateElHeight($container.find('.state[data-state="reset-password"]'));
-              });
+            $container.find('.reset-password-error').html(Fliplet.parseError(error) || T('widgets.login.dataSource.errors.unknown'));
+            $container.find('.reset-password-error').removeClass('hidden');
+            calculateElHeight($container.find('.state[data-state="reset-password"]'));
           });
         }
 
