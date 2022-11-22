@@ -263,7 +263,7 @@ function save(notifyComplete) {
     definition.sessionMaxDurationMinutes = $loggedInUserTime.val() !== ''
       ? $loggedInUserTime.val() * minutesInHour
       : '';
-    definition.sessionIdleTimeoutMinutes =  $loggedOutUserTime.val();
+    definition.sessionIdleTimeoutMinutes = $loggedOutUserTime.val();
 
     // Update data source definitions
     var options = { id: data.dataSource, definition: definition };
