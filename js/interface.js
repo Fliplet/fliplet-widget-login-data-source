@@ -8,8 +8,8 @@ var $dataColumnsPass = $('#passColumn');
 var validInputEventName = 'interface-validate';
 var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
-var $loggedInUserTime = $('[name="loggedInUserTime"]');
-var $loggedOutUserTime = $('[name="loggedOutUserTime"]');
+var $loggedInUserTime = $('#logged-in-user-time');
+var $loggedOutUserTime = $('#logged-out-user-time');
 var minutesInHour = 60;
 var currentDataSource;
 var initialLoadingDone = false;
@@ -259,8 +259,11 @@ function save(notifyComplete) {
       definition.exclude = _.compact(_.uniq(definition.exclude.concat([data.passColumn])));
     }
 
-    definition.sessionMaxDurationMinutes = $loggedInUserTime.val() !== '' ? $loggedInUserTime.val() * minutesInHour : '';// convert hours into minutes
-    definition.sessionIdleTimeoutMinutes =  $('[name="loggedOutUserTime"]').val();
+    // convert hours into minutes
+    definition.sessionMaxDurationMinutes = $loggedInUserTime.val() !== ''
+      ? $loggedInUserTime.val() * minutesInHour
+      : '';
+    definition.sessionIdleTimeoutMinutes =  $loggedOutUserTime.val();
 
     // Update data source definitions
     var options = { id: data.dataSource, definition: definition };
@@ -358,21 +361,13 @@ $('#expire-timeout').on('keydown', function(event) {
   return event.keyCode === 8 || /[0-9]+/.test(event.key);
 });
 
-/**
-* Hide the spinner
-* @return {undefined}
-*/
-function hideSpinner() {
-  $('.spinner-holder').hide();
-  $('.widget-holder').css('visibility', 'visible');
-}
-
 $('[data-toggle="tooltip"]').tooltip();
 
 function init() {
   initDataSourceProvider(data.dataSource);
   initializeData();
-  hideSpinner();
+
+  $('.spinner-holder').removeClass('animated');
 }
 
 init();

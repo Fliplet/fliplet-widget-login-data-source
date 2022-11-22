@@ -16,13 +16,17 @@ body {
 
 .widget-holder {
   padding: 15px;
-  visibility: hidden;
+}
+
+.spinner-holder {
+  padding-top: 50%;
+  height: 100vh;
+  display: none;
+  align-items: center;
 }
 
 .spinner-holder.animated {
-  height: 100vh;
-  display: flex;
-  align-items: center;
+  display: block;
 }
 
 .title-header {
