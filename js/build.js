@@ -74,7 +74,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     // New logic to redirect
     // Check if user is already verified
     if (!Fliplet.Env.get('disableSecurity')) {
-      Fliplet.User.getCachedSession()
+      Fliplet.User.getCachedSession({ force: true })
         .then(function(session) {
           if (!session || !session.accounts) {
             return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));

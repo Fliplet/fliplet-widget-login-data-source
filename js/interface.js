@@ -8,7 +8,9 @@ var $dataColumnsPass = $('#passColumn');
 var validInputEventName = 'interface-validate';
 var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
-
+var $loggedInUserTime = $('#logged-in-user-time');
+var $loggedOutUserTime = $('#logged-out-user-time');
+var minutesInHour = 60;
 var currentDataSource;
 var initialLoadingDone = false;
 var defaultExpireTimeout = 2880;
@@ -118,6 +120,14 @@ function initDataSourceProvider(currentDataSourceId) {
     selector: '#dataSourceProvider',
     data: dataSourceData,
     onEvent: function(event, dataSource) {
+      if (typeof dataSource.definition !== 'undefined' && dataSource.definition.sessionMaxDurationMinutes) {
+        $loggedInUserTime.val(dataSource.definition.sessionMaxDurationMinutes / minutesInHour);
+      }
+
+      if (typeof dataSource.definition !== 'undefined' && dataSource.definition.sessionIdleTimeoutMinutes) {
+        $loggedOutUserTime.val(dataSource.definition.sessionIdleTimeoutMinutes);
+      }
+
       if (event === 'dataSourceSelect') {
         $dataColumnsEmail.html(
           '<option selected value="">-- Select email column</option>'
@@ -250,6 +260,12 @@ function save(notifyComplete) {
       definition.exclude = _.compact(_.uniq(definition.exclude.concat([data.passColumn])));
     }
 
+    // convert hours into minutes
+    definition.sessionMaxDurationMinutes = $loggedInUserTime.val() !== ''
+      ? $loggedInUserTime.val() * minutesInHour
+      : '';
+    definition.sessionIdleTimeoutMinutes = $loggedOutUserTime.val();
+
     // Update data source definitions
     var options = { id: data.dataSource, definition: definition };
 
@@ -346,9 +362,13 @@ $('#expire-timeout').on('keydown', function(event) {
   return event.keyCode === 8 || /[0-9]+/.test(event.key);
 });
 
+$('[data-toggle="tooltip"]').tooltip();
+
 function init() {
   initDataSourceProvider(data.dataSource);
   initializeData();
+
+  $('.spinner-holder').removeClass('animated');
 }
 
 init();

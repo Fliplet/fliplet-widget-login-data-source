@@ -18,9 +18,20 @@ body {
   padding: 15px;
 }
 
+.spinner-holder {
+  padding-top: 50%;
+  height: 100vh;
+  display: none;
+  align-items: center;
+}
+
+.spinner-holder.animated {
+  display: block;
+}
+
 .title-header {
-  font-size: 1.0em;
-  border-bottom: 1px solid #E3E9EB;
+  font-size: 1em;
+  border-bottom: 1px solid #e3e9eb;
   margin-bottom: 1.5em;
   margin-top: 1.5em;
   padding-bottom: 1em;
@@ -31,7 +42,7 @@ body {
   font-weight: bold;
 }
 
-.title-header p+p {
+.title-header p + p {
   font-weight: normal;
 }
 
@@ -87,4 +98,25 @@ select.custom-chevron + i.fa {
   .container-fluid {
     padding: 0 12.5%;
   }
+}
+
+.time-label {
+  border-left: none;
+  background-color: #f8f6f7;
+}
+
+.logged-user {
+  border-right: none;
+}
+
+.logged-user:focus {
+  border-right: 1px solid;
+  border-color: #00abd1;
+}
+
+.help-icon {
+  font-size: 16px;
+  margin-left: 4px;
+  color: #333;
+  opacity: 0.5;
 }
