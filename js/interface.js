@@ -8,7 +8,9 @@ var $dataColumnsPass = $('#passColumn');
 var validInputEventName = 'interface-validate';
 var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
-
+var $loggedInUserTime = $('#logged-in-user-time');
+var $loggedOutUserTime = $('#logged-out-user-time');
+var minutesInHour = 60;
 var currentDataSource;
 var initialLoadingDone = false;
 var defaultExpireTimeout = 2880;
@@ -101,11 +103,6 @@ loginActionProvider.then(function(result) {
   save(true);
 });
 
-// Function to compile a Handlebars template
-function template(name) {
-  return Handlebars.compile($('#template-' + name).html());
-}
-
 function initDataSourceProvider(currentDataSourceId) {
   var dataSourceData = {
     dataSourceTitle: 'Login data source',
@@ -123,6 +120,14 @@ function initDataSourceProvider(currentDataSourceId) {
     selector: '#dataSourceProvider',
     data: dataSourceData,
     onEvent: function(event, dataSource) {
+      if (typeof dataSource.definition !== 'undefined' && dataSource.definition.sessionMaxDurationMinutes) {
+        $loggedInUserTime.val(dataSource.definition.sessionMaxDurationMinutes / minutesInHour);
+      }
+
+      if (typeof dataSource.definition !== 'undefined' && dataSource.definition.sessionIdleTimeoutMinutes) {
+        $loggedOutUserTime.val(dataSource.definition.sessionIdleTimeoutMinutes);
+      }
+
       if (event === 'dataSourceSelect') {
         $dataColumnsEmail.html(
           '<option selected value="">-- Select email column</option>'
@@ -187,6 +192,7 @@ function setReadableExpirePeriod(value) {
 function convertTimeToMinutes() {
   var inputValue = $('#expire-timeout').val();
   var selectValue = $('#time-value').val();
+
   return inputValue * selectValue;
 }
 
@@ -215,6 +221,7 @@ function save(notifyComplete) {
   _.forEach(fields, function(fieldId) {
     if (fieldId === 'expireTimeout') {
       data[fieldId] = $('#expire-timeout').val() ? convertTimeToMinutes() : defaultExpireTimeout;
+
       return;
     }
 
@@ -236,9 +243,11 @@ function save(notifyComplete) {
           subject: 'Validate your email address'
         },
         toColumn: data.emailColumn,
-        matchColumn: data.emailColumn
+        matchColumn: data.emailColumn,
+        passwordColumn: data.passColumn
       }
     };
+
     definition.validation = validation;
 
     // Update definition to make sure the password never gets sent
@@ -251,8 +260,15 @@ function save(notifyComplete) {
       definition.exclude = _.compact(_.uniq(definition.exclude.concat([data.passColumn])));
     }
 
+    // convert hours into minutes
+    definition.sessionMaxDurationMinutes = $loggedInUserTime.val() !== ''
+      ? $loggedInUserTime.val() * minutesInHour
+      : '';
+    definition.sessionIdleTimeoutMinutes = $loggedOutUserTime.val();
+
     // Update data source definitions
     var options = { id: data.dataSource, definition: definition };
+
     updateDataSource = Fliplet.DataSources.update(options);
   }
 
@@ -288,6 +304,7 @@ function syncTempColumns(columnType) {
 $('#emailColumn, #passColumn').on('change', function() {
   var selectedValue = $(this).val();
   var selectedText = $(this).find('option:selected').text();
+
   $(this).parents('.select-proxy-display').find('.select-value-proxy').html(selectedText);
 
   syncTempColumns($(this).attr('id'));
@@ -345,9 +362,13 @@ $('#expire-timeout').on('keydown', function(event) {
   return event.keyCode === 8 || /[0-9]+/.test(event.key);
 });
 
+$('[data-toggle="tooltip"]').tooltip();
+
 function init() {
   initDataSourceProvider(data.dataSource);
   initializeData();
+
+  $('.spinner-holder').removeClass('animated');
 }
 
 init();
