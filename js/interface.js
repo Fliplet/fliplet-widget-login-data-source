@@ -116,6 +116,12 @@ function initDataSourceProvider(currentDataSourceId) {
     accessRules: []
   };
 
+  if (currentDataSourceId) {
+    Fliplet.DataSources.getById(currentDataSourceId).then(function(dataSource) {
+      currentDataSource = dataSource;
+    });
+  }
+
   dataSourceProvider = Fliplet.Widget.open('com.fliplet.data-source-provider', {
     selector: '#dataSourceProvider',
     data: dataSourceData,
