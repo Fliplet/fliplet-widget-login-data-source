@@ -27,10 +27,21 @@
               <span class="btn-label" data-translate="widgets.login.dataSource.login.action">Log in</span>
               <span class="loader" data-translate="widgets.login.dataSource.loading">Loading...</span>
             </button></p>
+
+          {{#if hasSignupScreen}}
+            <p>
+              <button class="btn btn-secondary btn-signup focus-outline" type="button">
+                <span class="btn-label" data-translate="widgets.login.dataSource.login.signup">Sign up</span>
+              </button>
+            </p>
+          {{/if}}
+
           {{#if allowReset}}
             <p><span class="btn btn-link btn-forget-pass focus-outline" tabindex="0" data-translate="widgets.login.dataSource.login.forgotPassword">Forgot your password?</span></p>
           {{/if}}
         </div>
+
+        <div class="alert alert-warning signup-warning hidden" role="alert" data-translate="widgets.login.dataSource.login.signupWarning">Please set up a registration screen to allow users to create an account and log in.</div>
       </form>
     </div>
   </div>
