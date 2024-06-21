@@ -8,7 +8,9 @@
           "passwordPlaceholder": "Enter your password",
           "mismatch": "The details you entered don’t match our records. Please try again.",
           "action": "Log in",
-          "forgotPassword": "Forgot your password?"
+          "forgotPassword": "Forgot your password?",
+          "signup": "Sign up",
+          "signupWarning": "Please set up a registration screen to allow users to create an account and log in."
         },
         "restore": {
           "instruction": "To reset your password you must verify your email address.",
@@ -59,6 +61,11 @@
         "successToast": {
           "title": "Login successful",
           "message": "To test security features in Fliplet Studio, go to \"Preview > Enable security\" to enable security.",
+          "ok": "OK"
+        },
+        "publicAppToast": {
+          "title": "Public apps need a registration screen",
+          "message": "Please set up a registration screen to allow users to create an account and log in.",
           "ok": "OK"
         }
       }
