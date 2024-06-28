@@ -74,8 +74,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
     if (signUpButton.length === 0) {
       // Button is completely removed from the DOM
-      console.warn('Registration button is removed from the DOM.');
-
       return true;
     }
 
@@ -86,8 +84,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
     if (isHidden) {
       // Button is hidden
-      console.warn('Registration button is hidden with CSS or JS.');
-
       return true;
     }
 
@@ -124,7 +120,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
     // New logic to redirect
     // Check if user is already verified
-    return Fliplet.User.getCachedSession({ force: true })
+    Fliplet.User.getCachedSession({ force: true })
       .then(function(session) {
         if (!session || !session.accounts) {
           return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
