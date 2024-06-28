@@ -11,13 +11,22 @@
       <form class="form-horizontal form-login">
         <div class="form-group clearfix ">
           <div class="col-sm-12 fl-email">
-            <input type="email" class="form-control profile_email focus-outline" name="Email" data-translate="[placeholder]widgets.login.dataSource.login.emailPlaceholder" placeholder="Enter your email" autocomplete="false" />
+            
+            <label for="email-{{id}}" data-translate="[placeholder]widgets.login.dataSource.login.emailLabel">
+              <span class="sr-only">Email</span>
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+            </label>
+            <input type="email" id="email-{{id}}" class="form-control profile_email focus-outline" name="Email" data-translate="[placeholder]widgets.login.dataSource.login.emailPlaceholder" placeholder="Enter your email" autocomplete="false" required />
           </div>
         </div>
 
         <div class="form-group clearfix">
           <div class="col-sm-12 fl-password">
-            <input type="password" class="form-control profile_password focus-outline" name="Password" data-translate="[placeholder]widgets.login.dataSource.login.passwordPlaceholder" placeholder="Enter your password" autocomplete="new-password" />
+            <label for="password-{{id}}" data-translate="[placeholder]widgets.login.dataSource.login.passwordLabel">
+              <span class="sr-only">Password</span>
+              <i class="fa fa-lock" aria-hidden="true"></i>
+            </label>
+            <input type="password" id="password-{{id}}" class="form-control profile_password focus-outline" name="Password" data-translate="[placeholder]widgets.login.dataSource.login.passwordPlaceholder" placeholder="Enter your password" autocomplete="new-password" required />
           </div>
         </div>
 

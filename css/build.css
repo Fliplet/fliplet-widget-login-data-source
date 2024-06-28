@@ -30,54 +30,38 @@ img {
   position: relative;
 }
 
+.fl-login-form .form-group label {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  top: 50%;
+  left: 17px;
+  width: 44px;
+  height: 24px;
+  font-size: 22px;
+  line-height: 24px;
+  margin-top: -12px;
+  z-index: 9;
+  border-right: 1px solid #337ab7;
+  text-align: center;
+  color: #337ab7;
+}
+
+.fl-login-form .form-group label .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 input.form-control {
   height: 45px;
   box-shadow: none;
   -webkit-appearance: none;
-}
-
-.fl-login-form .fl-email:before {
-  content: "\f0e0";
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  position: absolute;
-  top: 50%;
-  left: 17px;
-  width: 44px;
-  height: 24px;
-  font-size: 22px;
-  line-height: 24px;
-  margin-top: -12px;
-  z-index: 9;
-  border-right: 1px solid #337ab7;
-  text-align: center;
-  color: #337ab7;
-}
-
-.fl-login-form .fl-password:before {
-  content: "\f023";
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  position: absolute;
-  top: 50%;
-  left: 17px;
-  width: 44px;
-  height: 24px;
-  font-size: 22px;
-  line-height: 24px;
-  margin-top: -12px;
-  z-index: 9;
-  border-right: 1px solid #337ab7;
-  text-align: center;
-  color: #337ab7;
 }
 
 .form-btns {
@@ -97,7 +81,6 @@ input.form-control {
   transition: width 0.35s ease-out;
   pointer-events: none;
 }
-
 
 /* END OF LOGIN */
 /* LOADER ANIMATION */
@@ -122,7 +105,7 @@ input.form-control {
   border-top: 5px solid rgba(255, 255, 255, 0.2);
   border-right: 5px solid rgba(255, 255, 255, 0.2);
   border-bottom: 5px solid rgba(255, 255, 255, 0.2);
-  border-left: 5px solid #FFFFFF;
+  border-left: 5px solid #ffffff;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
@@ -236,8 +219,8 @@ input.form-control {
 }
 
 .text-danger {
-	-webkit-transition: all 0.25s ease;
-	transition: all 0.25s ease;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 #offline-notification {
@@ -245,7 +228,7 @@ input.form-control {
   width: 100%;
   line-height: 27px;
   text-align: center;
-  color: #FFF;
+  color: #fff;
   background-color: #ce4844;
 }
 
@@ -286,7 +269,7 @@ input.form-control {
 }
 
 .password-checker .panel-body {
-  padding: 15px 15px 5px 15px
+  padding: 15px 15px 5px 15px;
 }
 
 .requirement {
@@ -313,7 +296,7 @@ input.form-control {
 }
 
 .requirement .requirement-marker i.fa {
-  color: #FFF;
+  color: #fff;
   font-size: 10px;
   -webkit-transform: scale(0);
   -ms-transform: scale(0);
