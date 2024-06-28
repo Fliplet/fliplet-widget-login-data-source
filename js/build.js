@@ -755,6 +755,33 @@ Fliplet.Widget.instance('login-ds', function(data) {
             });
         });
     });
+
+    $container.on('click', '.toggle-password-visibility', function() {
+      var $passwordField = $container.find('.profile_password');
+      var $eyeOpen = $container.find('.eye-open');
+      var $eyeClosed = $container.find('.eye-closed');
+      var $srText = $container.find('.sr-only');
+
+      if ($passwordField.attr('type') === 'password') {
+        $passwordField.attr('type', 'text');
+
+        $(this).attr('aria-checked', 'true');
+
+        $srText.text('Hide password');
+
+        $eyeOpen.addClass('hidden');
+        $eyeClosed.removeClass('hidden');
+      } else {
+        $passwordField.attr('type', 'password');
+
+        $(this).attr('aria-checked', 'false');
+
+        $srText.text('Show password');
+
+        $eyeOpen.removeClass('hidden');
+        $eyeClosed.addClass('hidden');
+      }
+    });
   }
 
   function setUserDataPV(successCallback, failCallback) {
