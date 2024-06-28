@@ -24,7 +24,8 @@ var defaultEmailTemplate = $('#email-template-default').html();
 var fields = [
   'emailColumn',
   'passColumn',
-  'expireTimeout'
+  'expireTimeout',
+  'signupButtonLabel'
 ];
 
 var tempColumnValues = {
@@ -74,11 +75,18 @@ Fliplet.Widget.onSaveRequest(function() {
 $('form').submit(function(event) {
   event.preventDefault();
 
+  if (isPublicApp && (!data.registrationAction || data.registrationAction.page === 'none')) {
+    Fliplet.Modal.alert({
+      title: 'Registration screen required',
+      message: 'Your app plan requires a registration button.<br>Please ensure you configure this button on the registration screen before launching your app.'
+    });
+  }
+
   loginActionProvider.forwardSaveRequest();
   registrationActionProvider.forwardSaveRequest();
 });
 
-function initLinkProvider() {
+function initLinkProviders() {
   var linkData = {
     action: 'screen',
     page: 'none',
@@ -321,8 +329,9 @@ function save(notifyComplete) {
     updateDataSource = Fliplet.DataSources.update(options);
   }
 
-  data.hasSignupScreen = data.registrationAction && data.registrationAction.page !== 'none';
-  data.showSignupWarning = isPublicApp && (!data.registrationAction || !data.registrationAction.page || data.registrationAction.page === 'none');
+  data.hasSignupScreen = isPublicApp
+    ? !!(data.registrationAction && data.registrationAction.page)
+    : data.registrationAction && data.registrationAction.page !== 'none';
 
   return updateDataSource.then(function() {
     return Fliplet.Widget.save(data).then(function() {
@@ -444,7 +453,7 @@ $('.upgrade-plan').on('click', function() {
 
 function init() {
   initDataSourceProvider(data.dataSource);
-  initLinkProvider();
+  initLinkProviders();
   initializeData();
 
   $('.spinner-holder').removeClass('animated');

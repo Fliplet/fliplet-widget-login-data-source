@@ -129,3 +129,7 @@ select.custom-chevron + i.fa {
   font-size: 1.14em;
   margin-bottom: 5px;
 }
+
+.form-group .callout {
+  margin: 10px 15px;
+}

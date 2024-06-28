@@ -31,7 +31,7 @@
           {{#if hasSignupScreen}}
             <p>
               <button class="btn btn-secondary btn-signup focus-outline" type="button">
-                <span class="btn-label" data-translate="widgets.login.dataSource.login.signup">Sign up</span>
+                <span class="btn-label" data-translate="widgets.login.dataSource.login.signup">{{ signupButtonLabel }}</span>
               </button>
             </p>
           {{/if}}
@@ -41,7 +41,7 @@
           {{/if}}
         </div>
 
-        <div class="alert alert-warning signup-warning hidden" role="alert" data-translate="widgets.login.dataSource.login.signupWarning">Please set up a registration screen to allow users to create an account and log in.</div>
+        <div class="alert alert-warning signup-warning hidden" role="alert"><strong data-translate="widgets.login.dataSource.login.signupWarningBoldMessage">Registration button seems to be hidden.</strong> <span data-translate="widgets.login.dataSource.login.signupWarningMessage">Please ensure the registration button is visible. Until the registration button is restored the log in feature won't work.</span></div>
       </form>
     </div>
   </div>

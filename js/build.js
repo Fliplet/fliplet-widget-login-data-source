@@ -68,6 +68,32 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $passwordConfirmChecker.attr('checked', confirmation === password && !!confirmation);
   }
 
+  function isSignUpButtonHidden() {
+    // Check if the button exists in the DOM
+    var signUpButton = $('.btn-signup');
+
+    if (signUpButton.length === 0) {
+      // Button is completely removed from the DOM
+      console.warn('Registration button is removed from the DOM.');
+
+      return true;
+    }
+
+    // Check if the button is hidden with CSS or JS
+    var isHidden = signUpButton.css('display') === 'none'
+      || signUpButton.css('visibility') === 'hidden'
+      || signUpButton.css('opacity') === '0';
+
+    if (isHidden) {
+      // Button is hidden
+      console.warn('Registration button is hidden with CSS or JS.');
+
+      return true;
+    }
+
+    return false;
+  }
+
   function getAppData() {
     return Fliplet.API.request({
       url: 'v1/apps/' + Fliplet.Env.get('appId'),
@@ -79,85 +105,82 @@ Fliplet.Widget.instance('login-ds', function(data) {
         ? appData.plan.name === 'public' || appData.plan.name === 'public-plus'
         : true;
 
-      if (isPublicApp && (!data.registrationAction || data.showSignupWarning)) {
+      if (Fliplet.Env.get('preview') && isPublicApp && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
         $container.find('.signup-warning').removeClass('hidden');
       }
     });
   }
 
   function initEmailValidation() {
-    getAppData()
+    Fliplet.Security.Storage.init()
       .then(function() {
-        Fliplet.Security.Storage.init()
-          .then(function() {
-            attachEventListeners();
-            setUserDataPV(function() {}, function() {});
-          });
+        attachEventListeners();
+        setUserDataPV(function() {}, function() {});
+      });
 
-        if (Fliplet.Env.get('disableSecurity')) {
-          return;
+    if (Fliplet.Env.get('disableSecurity')) {
+      return;
+    }
+
+    // New logic to redirect
+    // Check if user is already verified
+    return Fliplet.User.getCachedSession({ force: true })
+      .then(function(session) {
+        if (!session || !session.accounts) {
+          return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
         }
 
-        // New logic to redirect
-        // Check if user is already verified
-        return Fliplet.User.getCachedSession({ force: true })
-          .then(function(session) {
-            if (!session || !session.accounts) {
-              return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
-            }
+        var dataSource = session.accounts.dataSource || [];
+        var verifiedAccounts = dataSource.filter(function(dataSourceAccount) {
+          return dataSourceAccount.dataSourceId === APP_VALIDATION_DATA_DIRECTORY_ID;
+        });
 
-            var dataSource = session.accounts.dataSource || [];
-            var verifiedAccounts = dataSource.filter(function(dataSourceAccount) {
-              return dataSourceAccount.dataSourceId === APP_VALIDATION_DATA_DIRECTORY_ID;
-            });
+        if (!verifiedAccounts.length) {
+          return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
+        }
 
-            if (!verifiedAccounts.length) {
-              return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
-            }
+        if (_.get(session, 'server.passports.dataSource[0].requiresPasswordReset')) {
+          return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
+        }
 
-            if (_.get(session, 'server.passports.dataSource[0].requiresPasswordReset')) {
-              return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
-            }
+        // Update stored email address based on retrieved session
+        var entry = verifiedAccounts[0];
+        var email = entry.data[DATA_DIRECTORY_EMAIL_COLUMN];
+        var user = createUserProfile(entry);
 
-            // Update stored email address based on retrieved session
-            var entry = verifiedAccounts[0];
-            var email = entry.data[DATA_DIRECTORY_EMAIL_COLUMN];
-            var user = createUserProfile(entry);
-
-            return Promise.all([
-              Fliplet.App.Storage.set({
-                'fl-chat-source-id': entry.dataSourceId,
-                'fl-chat-auth-email': email,
-                'fl-login-data-source': entry
-              }),
-              Fliplet.Profile.set({
-                'email': email,
-                'user': user
-              }),
-              Fliplet.Security.Storage.update()
-            ])
-              .then(function() {
-                return Fliplet.Hooks.run('sessionValidate', {
-                  passport: 'dataSource',
-                  session: session,
-                  entry: entry,
-                  userProfile: user
-                });
-              });
-          })
+        return Promise.all([
+          Fliplet.App.Storage.set({
+            'fl-chat-source-id': entry.dataSourceId,
+            'fl-chat-auth-email': email,
+            'fl-login-data-source': entry
+          }),
+          Fliplet.Profile.set({
+            'email': email,
+            'user': user
+          }),
+          Fliplet.Security.Storage.update()
+        ])
           .then(function() {
-            if (typeof data.loginAction === 'undefined') {
-              return Promise.reject(T('widgets.login.dataSource.errors.redirectMissing'));
-            }
-
-            var navigate = Fliplet.Navigate.to(data.loginAction);
-
-            if (typeof navigate === 'object' && typeof navigate.then === 'function') {
-              return navigate;
-            }
-
-            return Promise.resolve();
+            return Fliplet.Hooks.run('sessionValidate', {
+              passport: 'dataSource',
+              session: session,
+              entry: entry,
+              userProfile: user
+            });
           });
+      })
+      .then(function() {
+        if (typeof data.loginAction === 'undefined') {
+          return Promise.reject(T('widgets.login.dataSource.errors.redirectMissing'));
+        }
+
+        var navigate = Fliplet.Navigate.to(data.loginAction);
+
+        if (typeof navigate === 'object' && typeof navigate.then === 'function') {
+          return navigate;
+        }
+
+        return Promise.resolve();
       })
       .catch(function(error) {
         console.warn(error);
@@ -218,7 +241,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       var _this = $(this);
 
-      if (isPublicApp && (!data.registrationAction || !data.registrationAction.page || data.registrationAction.page === 'none')) {
+      if (isPublicApp && isSignUpButtonHidden()) {
         return Fliplet.UI.Toast({
           type: 'regular',
           duration: false,
@@ -757,6 +780,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $container.translate();
 
     initEmailValidation();
+    getAppData();
 
     if (Fliplet.Env.get('interact')) {
       // Disables password fields in edit mode to avoid password autofill

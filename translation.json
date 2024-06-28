@@ -9,8 +9,9 @@
           "mismatch": "The details you entered don’t match our records. Please try again.",
           "action": "Log in",
           "forgotPassword": "Forgot your password?",
-          "signup": "Sign up",
-          "signupWarning": "Please set up a registration screen to allow users to create an account and log in."
+          "signup": "Create account",
+          "signupWarningBoldMessage": "Registration button seems to be hidden.",
+          "signupWarningMessage": "Please ensure the registration button is visible. Until the registration button is restored the log in feature won't work."
         },
         "restore": {
           "instruction": "To reset your password you must verify your email address.",
@@ -64,8 +65,8 @@
           "ok": "OK"
         },
         "publicAppToast": {
-          "title": "Public apps need a registration screen",
-          "message": "Please set up a registration screen to allow users to create an account and log in.",
+          "title": "Login error",
+          "message": "A configuration error was found with the login feature. Please contact the app administrator.",
           "ok": "OK"
         }
       }
