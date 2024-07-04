@@ -90,21 +90,17 @@ Fliplet.Widget.instance('login-ds', function(data) {
     return false;
   }
 
-  function getAppData() {
-    return Fliplet.API.request({
-      url: 'v1/apps/' + Fliplet.Env.get('appId'),
-      method: 'GET'
-    }).then(function(response) {
-      var appData = response.app;
+  function checkSignupButton() {
+    var OrganizationPlan = Fliplet.Env.get('organizationPlan');
+    var appPlan = Fliplet.Env.get('appPlan');
 
-      isPublicApp = appData.plan && appData.plan.active
-        ? appData.plan.name === 'public' || appData.plan.name === 'public-plus'
-        : true;
+    isPublicApp = (!appPlan && (OrganizationPlan && !OrganizationPlan.name))
+      || (appPlan && !appPlan.active)
+      || (appPlan && appPlan.active && (appPlan.name === 'public' || appPlan.name === 'public-plus'));
 
-      if (Fliplet.Env.get('preview') && isPublicApp && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
-        $container.find('.signup-warning').removeClass('hidden');
-      }
-    });
+    if (Fliplet.Env.get('preview') && isPublicApp && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
+      $container.find('.signup-warning').removeClass('hidden');
+    }
   }
 
   function initEmailValidation() {
@@ -776,7 +772,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $container.translate();
 
     initEmailValidation();
-    getAppData();
+    checkSignupButton();
 
     if (Fliplet.Env.get('interact')) {
       // Disables password fields in edit mode to avoid password autofill
