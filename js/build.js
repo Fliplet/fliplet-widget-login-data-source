@@ -94,7 +94,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     var organizationPlan = Fliplet.Env.get('organizationPlan');
     var appPlan = Fliplet.Env.get('appPlan');
 
-    isPublicApp = (!appPlan && (organizationPlan && !organizationPlan.name))
+    isPublicApp = (!appPlan && (!organizationPlan || !organizationPlan.name))
       || (appPlan && !appPlan.active)
       || (appPlan && appPlan.active && (appPlan.name === 'public' || appPlan.name === 'public-plus'));
 
