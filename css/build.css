@@ -132,7 +132,7 @@ input.form-control {
   border-top: 5px solid rgba(255, 255, 255, 0.2);
   border-right: 5px solid rgba(255, 255, 255, 0.2);
   border-bottom: 5px solid rgba(255, 255, 255, 0.2);
-  border-left: 5px solid #ffffff;
+  border-left: 5px solid #fff;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
