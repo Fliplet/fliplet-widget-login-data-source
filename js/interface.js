@@ -2,6 +2,8 @@
 var widgetId = Fliplet.Widget.getDefaultId();
 var data = Fliplet.Widget.getData(widgetId) || {};
 var appId = Fliplet.Env.get('appId');
+var isPublicApp = Fliplet.Navigate.query && Fliplet.Navigate.query.isPublicApp === 'true';
+var planName = Fliplet.Navigate.query && Fliplet.Navigate.query.planName;
 var dataSourceProvider = null;
 var $dataColumnsEmail = $('#emailColumn');
 var $dataColumnsPass = $('#passColumn');
@@ -14,39 +16,17 @@ var minutesInHour = 60;
 var currentDataSource;
 var initialLoadingDone = false;
 var defaultExpireTimeout = 2880;
+var loginActionProvider;
+var registrationActionProvider;
 
 var defaultEmailTemplate = $('#email-template-default').html();
 
 var fields = [
   'emailColumn',
   'passColumn',
-  'expireTimeout'
+  'expireTimeout',
+  'signupButtonLabel'
 ];
-
-var linkData = $.extend(true, {
-  action: 'screen',
-  page: '',
-  omitPages: omitPages,
-  transition: 'fade',
-  options: {
-    hideAction: true
-  }
-}, data.loginAction);
-
-var loginActionProvider = Fliplet.Widget.open('com.fliplet.link', {
-  // If provided, the iframe will be appended here,
-  // otherwise will be displayed as a full-size iframe overlay
-  selector: '#login-link-action',
-  // Also send the data I have locally, so that
-  // the interface gets repopulated with the same stuff
-  data: linkData,
-  // Events fired from the provider
-  onEvent: function(event, data) {
-    if (event === 'interface-validate') {
-      Fliplet.Widget.toggleSaveButton(data.isValid === true);
-    }
-  }
-});
 
 var tempColumnValues = {
   emailColumn: data['emailColumn'],
@@ -94,14 +74,85 @@ Fliplet.Widget.onSaveRequest(function() {
 // 2. Fired when the user submits the form
 $('form').submit(function(event) {
   event.preventDefault();
+
+  if (isPublicApp && (!data.registrationAction || data.registrationAction.page === 'none')) {
+    Fliplet.Modal.alert({
+      title: 'Registration screen required',
+      message: 'Your app plan requires a registration button.<br>Please ensure you configure this button on the registration screen before launching your app.'
+    });
+  }
+
   loginActionProvider.forwardSaveRequest();
+  registrationActionProvider.forwardSaveRequest();
 });
 
-// 3. Fired when the provider has finished
-loginActionProvider.then(function(result) {
-  data.loginAction = result.data;
-  save(true);
-});
+function initLinkProviders() {
+  var linkData = {
+    action: 'screen',
+    page: 'none',
+    omitPages: omitPages,
+    transition: 'fade',
+    options: {
+      hideAction: true
+    }
+  };
+
+  if (loginActionProvider) {
+    loginActionProvider.close();
+    loginActionProvider = null;
+  }
+
+  if (registrationActionProvider) {
+    registrationActionProvider.close();
+
+    registrationActionProvider = null;
+  }
+
+  loginActionProvider = Fliplet.Widget.open('com.fliplet.link', {
+    // If provided, the iframe will be appended here,
+    // otherwise will be displayed as a full-size iframe overlay
+    selector: '#login-link-action',
+    // Also send the data I have locally, so that
+    // the interface gets repopulated with the same stuff
+    data: $.extend(true, linkData, data.loginAction),
+    // Events fired from the provider
+    onEvent: function(event, result) {
+      if (event === 'interface-validate') {
+        Fliplet.Widget.toggleSaveButton(result.isValid === true);
+      }
+    }
+  });
+
+  registrationActionProvider = Fliplet.Widget.open('com.fliplet.link', {
+    // If provided, the iframe will be appended here,
+    // otherwise will be displayed as a full-size iframe overlay
+    selector: '#registration-link-action',
+    // Also send the data I have locally, so that
+    // the interface gets repopulated with the same stuff
+    data: $.extend(true, linkData, data.registrationAction),
+    // Events fired from the provider
+    onEvent: function(event, result) {
+      if (event === 'onPageChange') {
+        if (data.value === 'none') {
+          return;
+        }
+
+        data.registrationAction = _.assign({}, data.registrationAction, { page: result.value });
+      }
+
+      if (event === 'interface-validate') {
+        Fliplet.Widget.toggleSaveButton(result.isValid === true);
+      }
+    }
+  });
+
+  Promise.all([loginActionProvider, registrationActionProvider]).then(function(results) {
+    data.loginAction = results[0].data;
+    data.registrationAction = results[1].data;
+
+    save(true);
+  });
+}
 
 function initDataSourceProvider(currentDataSourceId) {
   var dataSourceData = {
@@ -278,6 +329,10 @@ function save(notifyComplete) {
     updateDataSource = Fliplet.DataSources.update(options);
   }
 
+  data.hasSignupScreen = isPublicApp
+    ? !!(data.registrationAction && data.registrationAction.page)
+    : data.registrationAction && data.registrationAction.page !== 'none';
+
   return updateDataSource.then(function() {
     return Fliplet.Widget.save(data).then(function() {
       if (notifyComplete) {
@@ -361,6 +416,13 @@ function initializeData() {
   if (data.allowReset) {
     $('#allow_reset').trigger('change');
   }
+
+  $('.plan-name').text(planName);
+
+  if (!isPublicApp) {
+    $('#registration-alert').addClass('hidden');
+    $('.registration-optional-label').removeClass('hidden');
+  }
 }
 
 // Preveting entering invalid values in the expiration input
@@ -370,8 +432,28 @@ $('#expire-timeout').on('keydown', function(event) {
 
 $('[data-toggle="tooltip"]').tooltip();
 
+$('.upgrade-plan').on('click', function() {
+  Fliplet.Studio.emit('overlay', {
+    name: 'app-settings',
+    options: {
+      size: 'large',
+      title: 'App Settings',
+      appId: appId,
+      section: 'appBilling',
+      helpLink: 'https://help.fliplet.com/app-settings/'
+    }
+  });
+
+  Fliplet.Studio.emit('track-event', {
+    category: 'app_billing',
+    action: 'open_overlay',
+    context: 'login_component'
+  });
+});
+
 function init() {
   initDataSourceProvider(data.dataSource);
+  initLinkProviders();
   initializeData();
 
   $('.spinner-holder').removeClass('animated');
