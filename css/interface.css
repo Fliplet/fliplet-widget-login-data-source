@@ -120,16 +120,3 @@ select.custom-chevron + i.fa {
   color: #333;
   opacity: 0.5;
 }
-
-.callout.callout-sm {
-  font-size: 1.1rem;
-}
-
-.callout.callout-sm h4 {
-  font-size: 1.14em;
-  margin-bottom: 5px;
-}
-
-.form-group .callout {
-  margin: 10px 15px;
-}
