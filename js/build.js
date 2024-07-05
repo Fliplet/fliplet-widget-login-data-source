@@ -19,6 +19,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $passwordNumberCkecker = $('.password-number');
   var $passwordSpecialCkecker = $('.password-special');
   var $passwordConfirmChecker = $('.password-confirmation-check');
+  var isPublicApp;
 
   var rules = {
     passwordMinLength: /.{8,}/,
