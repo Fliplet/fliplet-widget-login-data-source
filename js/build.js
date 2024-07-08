@@ -1,10 +1,6 @@
 Fliplet.Widget.instance('login-ds', function(data) {
   window.userDataPV = window.userDataPV || {};
 
-  data.showSignupWarning = typeof data.showSignupWarning !== 'undefined'
-    ? data.showSignupWarning
-    : true;
-
   var $container = $(this);
   var userDataPV = window.userDataPV;
   var resetEmail;
@@ -19,7 +15,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $passwordNumberCkecker = $('.password-number');
   var $passwordSpecialCkecker = $('.password-special');
   var $passwordConfirmChecker = $('.password-confirmation-check');
-  var isPublicApp;
 
   var rules = {
     passwordMinLength: /.{8,}/,
@@ -28,6 +23,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
     isNumber: /[0-9]/,
     isSpecial: /[^A-Za-z0-9]/
   };
+
+  var dataSourceEntry; // Data source entry after user verify email
 
   // Do not track login related redirects
   if (typeof data.loginAction !== 'undefined') {
@@ -68,47 +65,11 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $passwordConfirmChecker.attr('checked', confirmation === password && !!confirmation);
   }
 
-  function isSignUpButtonHidden() {
-    // Check if the button exists in the DOM
-    var signUpButton = $('.btn-signup');
-
-    if (signUpButton.length === 0) {
-      // Button is completely removed from the DOM
-      return true;
-    }
-
-    // Check if the button is hidden with CSS or JS
-    var isHidden = signUpButton.css('display') === 'none'
-      || signUpButton.css('visibility') === 'hidden'
-      || signUpButton.css('opacity') === '0';
-
-    if (isHidden) {
-      // Button is hidden
-      return true;
-    }
-
-    return false;
-  }
-
-  function checkSignupButton() {
-    var organizationPlan = Fliplet.Env.get('organizationPlan');
-    var appPlan = Fliplet.Env.get('appPlan');
-
-    isPublicApp = (!appPlan && (!organizationPlan || !organizationPlan.name))
-      || (appPlan && !appPlan.active)
-      || (appPlan && appPlan.active && (appPlan.name === 'public' || appPlan.name === 'public-plus'));
-
-    if (Fliplet.Env.get('preview') && isPublicApp && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
-      $container.find('.signup-warning').removeClass('hidden');
-    }
-  }
-
   function initEmailValidation() {
-    Fliplet.Security.Storage.init()
-      .then(function() {
-        attachEventListeners();
-        setUserDataPV(function() {}, function() {});
-      });
+    Fliplet.Security.Storage.init().then(function() {
+      attachEventListeners();
+      setUserDataPV(function() {}, function() {});
+    });
 
     if (Fliplet.Env.get('disableSecurity')) {
       return;
@@ -233,24 +194,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       var _this = $(this);
 
-      if (isPublicApp && isSignUpButtonHidden()) {
-        return Fliplet.UI.Toast({
-          type: 'regular',
-          duration: false,
-          tapToDismiss: false,
-          title: T('widgets.login.dataSource.publicAppToast.title'),
-          message: T('widgets.login.dataSource.publicAppToast.message'),
-          actions: [
-            {
-              label: T('widgets.login.dataSource.publicAppToast.ok'),
-              action: function() {
-                Fliplet.UI.Toast.dismiss();
-              }
-            }
-          ]
-        });
-      }
-
       _this.find('.login-error').addClass('hidden');
 
       var profileEmail = $container.find('input.profile_email').val().toLowerCase();
@@ -279,7 +222,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       where[DATA_DIRECTORY_EMAIL_COLUMN] = profileEmail;
       where[DATA_DIRECTORY_PASS_COLUMN] = profilePassword;
-
       loginFromDataSource(APP_VALIDATION_DATA_DIRECTORY_ID, where)
         .then(function(authorization) {
           if (typeof authorization !== 'object') {
@@ -400,30 +342,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
           $container.find('.fl-restore-pass').fadeIn(300);
           calculateElHeight($container.find('.state[data-state=verify-email]'));
         });
-      }
-    });
-
-    $container.on('click keydown', '.btn-signup', function(event) {
-      if (event.type === 'click' || event.which === 32 || event.which === 13) {
-        if (typeof data.registrationAction === 'undefined') {
-          Fliplet.UI.Toast({
-            type: 'regular',
-            duration: false,
-            tapToDismiss: false,
-            title: T('widgets.login.dataSource.publicAppToast.title'),
-            message: T('widgets.login.dataSource.publicAppToast.message'),
-            actions: [
-              {
-                label: T('widgets.login.dataSource.publicAppToast.ok'),
-                action: function() {
-                  Fliplet.UI.Toast.dismiss();
-                }
-              }
-            ]
-          });
-        }
-
-        Fliplet.Navigate.to(data.registrationAction);
       }
     });
 
@@ -569,6 +487,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
                 requiresPasswordReset: true
               })
                 .then(function(entry) {
+                  dataSourceEntry = entry;
+
                   return Promise.all([
                     Fliplet.App.Storage.set({
                       'fl-chat-source-id': entry.dataSourceId,
@@ -772,7 +692,6 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $container.translate();
 
     initEmailValidation();
-    checkSignupButton();
 
     if (Fliplet.Env.get('interact')) {
       // Disables password fields in edit mode to avoid password autofill

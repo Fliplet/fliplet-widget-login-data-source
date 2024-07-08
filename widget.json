@@ -31,10 +31,5 @@
     ],
     "assets": ["js/build.js", "css/build.css"]
   },
-  "references": [
-    "loginAction.page:page",
-    "registrationAction.page:page",
-    "resetAction.page:page",
-    "dataSource:dataSource"
-  ]
+  "references": ["loginAction.page:page", "resetAction.page:page", "dataSource:dataSource"]
 }
