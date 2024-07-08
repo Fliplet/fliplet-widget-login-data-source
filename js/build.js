@@ -20,6 +20,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $passwordSpecialCkecker = $('.password-special');
   var $passwordConfirmChecker = $('.password-confirmation-check');
   var appPlan = Fliplet.Env.get('appPlan');
+  var isAppPlanActive = Fliplet.Env.get('isAppPlanActive');
   var organizationPlan = Fliplet.Env.get('organizationPlan');
 
   var rules = {
@@ -93,8 +94,8 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
   function isPublicApp() {
     return (!appPlan && (!organizationPlan || !organizationPlan.name))
-      || (appPlan && !appPlan.active)
-      || (appPlan && appPlan.active && (appPlan.name === 'public' || appPlan.name === 'public-plus'));
+      || (appPlan && !isAppPlanActive)
+      || (appPlan && isAppPlanActive && (appPlan === 'public' || appPlan === 'public-plus'));
   }
 
   function checkSignupButton() {
