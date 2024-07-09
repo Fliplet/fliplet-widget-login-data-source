@@ -114,7 +114,7 @@ function initLinkProviders() {
     selector: '#login-link-action',
     // Also send the data I have locally, so that
     // the interface gets repopulated with the same stuff
-    data: $.extend(true, linkData, data.loginAction),
+    data: _.assign({}, linkData, data.loginAction),
     // Events fired from the provider
     onEvent: function(event, result) {
       if (event === 'interface-validate') {
@@ -129,7 +129,7 @@ function initLinkProviders() {
     selector: '#registration-link-action',
     // Also send the data I have locally, so that
     // the interface gets repopulated with the same stuff
-    data: $.extend(true, linkData, data.registrationAction),
+    data: _.assign({}, linkData, data.registrationAction),
     // Events fired from the provider
     onEvent: function(event, result) {
       if (event === 'onPageChange') {

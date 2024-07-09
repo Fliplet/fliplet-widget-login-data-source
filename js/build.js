@@ -19,7 +19,9 @@ Fliplet.Widget.instance('login-ds', function(data) {
   var $passwordNumberCkecker = $('.password-number');
   var $passwordSpecialCkecker = $('.password-special');
   var $passwordConfirmChecker = $('.password-confirmation-check');
-  var isPublicApp;
+  var appPlan = Fliplet.Env.get('appPlan');
+  var isAppPlanActive = Fliplet.Env.get('isAppPlanActive');
+  var organizationPlan = Fliplet.Env.get('organizationPlan');
 
   var rules = {
     passwordMinLength: /.{8,}/,
@@ -90,21 +92,16 @@ Fliplet.Widget.instance('login-ds', function(data) {
     return false;
   }
 
-  function getAppData() {
-    return Fliplet.API.request({
-      url: 'v1/apps/' + Fliplet.Env.get('appId'),
-      method: 'GET'
-    }).then(function(response) {
-      var appData = response.app;
+  function isPublicApp() {
+    return (!appPlan && (!organizationPlan || !organizationPlan.name))
+      || (appPlan && !isAppPlanActive)
+      || (appPlan && isAppPlanActive && (appPlan === 'public' || appPlan === 'public-plus'));
+  }
 
-      isPublicApp = appData.plan && appData.plan.active
-        ? appData.plan.name === 'public' || appData.plan.name === 'public-plus'
-        : true;
-
-      if (Fliplet.Env.get('preview') && isPublicApp && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
-        $container.find('.signup-warning').removeClass('hidden');
-      }
-    });
+  function checkSignupButton() {
+    if (Fliplet.Env.get('preview') && isPublicApp() && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
+      $container.find('.signup-warning').removeClass('hidden');
+    }
   }
 
   function initEmailValidation() {
@@ -237,7 +234,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       var _this = $(this);
 
-      if (isPublicApp && isSignUpButtonHidden()) {
+      if (isPublicApp() && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
         return Fliplet.UI.Toast({
           type: 'regular',
           duration: false,
@@ -803,7 +800,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $container.translate();
 
     initEmailValidation();
-    getAppData();
+    checkSignupButton();
 
     if (Fliplet.Env.get('interact')) {
       // Disables password fields in edit mode to avoid password autofill
