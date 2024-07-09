@@ -93,7 +93,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
   }
 
   function isPublicApp() {
-    return (!appPlan && (!organizationPlan || !organizationPlan.name))
+    return (!appPlan && !organizationPlan)
       || (appPlan && !isAppPlanActive)
       || (appPlan && isAppPlanActive && (appPlan === 'public' || appPlan === 'public-plus'));
   }
