@@ -389,6 +389,18 @@ $('#allow_reset').on('change', function() {
   initialLoadingDone = true;
 });
 
+$('#allow_show_password').on('change', function() {
+  var checked = $(this).prop('checked');
+
+  data.allowShowPassword = checked;
+
+  if (initialLoadingDone) {
+    save();
+  }
+
+  initialLoadingDone = true;
+});
+
 // Open security overlay
 $('#security-alert u').on('click', function() {
   Fliplet.Studio.emit('overlay', {

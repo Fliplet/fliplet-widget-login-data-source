@@ -4,6 +4,8 @@
       "dataSource": {
         "login": {
           "instruction": "Enter your access details below",
+          "emailLabel": "Email",
+          "passwordLabel": "Password",
           "emailPlaceholder": "Enter your email",
           "passwordPlaceholder": "Enter your password",
           "mismatch": "The details you entered don’t match our records. Please try again.",

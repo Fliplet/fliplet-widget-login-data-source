@@ -11,13 +11,34 @@
       <form class="form-horizontal form-login">
         <div class="form-group clearfix ">
           <div class="col-sm-12 fl-email">
-            <input type="email" class="form-control profile_email focus-outline" name="Email" data-translate="[placeholder]widgets.login.dataSource.login.emailPlaceholder" placeholder="Enter your email" autocomplete="false" />
+            
+            <label for="email-{{id}}" data-translate="[placeholder]widgets.login.dataSource.login.emailLabel">
+              <span class="sr-only">Email</span>
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+            </label>
+            <input type="email" id="email-{{id}}" class="form-control profile_email focus-outline" name="Email" data-translate="[placeholder]widgets.login.dataSource.login.emailPlaceholder" placeholder="Enter your email" autocomplete="false" required />
           </div>
         </div>
 
         <div class="form-group clearfix">
           <div class="col-sm-12 fl-password">
-            <input type="password" class="form-control profile_password focus-outline" name="Password" data-translate="[placeholder]widgets.login.dataSource.login.passwordPlaceholder" placeholder="Enter your password" autocomplete="new-password" />
+            <label for="password-{{id}}" data-translate="[placeholder]widgets.login.dataSource.login.passwordLabel">
+              <span class="sr-only">Password</span>
+              <i class="fa fa-lock" aria-hidden="true"></i>
+            </label>
+            <input type="password" id="password-{{id}}" class="form-control profile_password focus-outline" name="Password" data-translate="[placeholder]widgets.login.dataSource.login.passwordPlaceholder" placeholder="Enter your password" autocomplete="new-password" required />
+            {{#if allowShowPassword}}
+            <button type="button" role="switch" aria-checked="false" class="toggle-password-visibility">
+              <span class="sr-only">Show password</span>
+              <svg class="icon eye-open" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="currentColor">
+                <path d="M9.72528 3.505C10.7861 3.505 11.8036 3.92643 12.5537 4.67657C13.3039 5.42672 13.7253 6.44413 13.7253 7.505C13.7253 8.56587 13.3039 9.58328 12.5537 10.3334C11.8036 11.0836 10.7861 11.505 9.72528 11.505C8.66442 11.505 7.647 11.0836 6.89686 10.3334C6.14671 9.58328 5.72528 8.56587 5.72528 7.505C5.72528 6.44413 6.14671 5.42672 6.89686 4.67657C7.647 3.92643 8.66442 3.505 9.72528 3.505ZM9.72528 3.74842e-07C14.3383 3.74842e-07 18.3213 3.15 19.4263 7.564C19.4747 7.75695 19.4445 7.96122 19.3423 8.13187C19.24 8.30253 19.0742 8.4256 18.8813 8.474C18.6883 8.5224 18.4841 8.49217 18.3134 8.38997C18.1428 8.28776 18.0197 8.12195 17.9713 7.929C17.5083 6.09247 16.4455 4.46306 14.9513 3.29913C13.4572 2.1352 11.6172 1.50338 9.72322 1.50384C7.82923 1.5043 5.9896 2.13702 4.49601 3.30167C3.00243 4.46632 1.94039 6.09625 1.47828 7.933C1.45445 8.0286 1.41202 8.11857 1.35341 8.19778C1.29481 8.27698 1.22117 8.34387 1.13672 8.39461C1.05226 8.44536 0.95864 8.47898 0.861193 8.49354C0.763747 8.50811 0.664386 8.50333 0.568784 8.4795C0.473182 8.45566 0.38321 8.41323 0.304006 8.35463C0.224803 8.29602 0.157918 8.22239 0.107171 8.13793C0.0564234 8.05348 0.0228077 7.95986 0.00824284 7.86241C-0.00632199 7.76496 -0.0015509 7.6656 0.022284 7.57C0.564125 5.40704 1.81333 3.48722 3.57139 2.11563C5.32945 0.744046 7.49548 -0.000609927 9.72528 3.74842e-07Z"/>
+              </svg>
+              <svg class="icon eye-closed hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 20 15" fill="currentColor">
+                <rect x="2" y="0.707031" width="1" height="20" rx="0.5" transform="rotate(-45 2 0.707031)"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.31613 2.73019C4.7021 3.03158 4.11709 3.39692 3.57139 3.82266C1.81333 5.19425 0.564125 7.11407 0.022284 9.27703C-0.0015509 9.37263 -0.00632199 9.472 0.00824284 9.56944C0.0228077 9.66689 0.0564234 9.76051 0.107171 9.84497C0.157918 9.92942 0.224803 10.0031 0.304006 10.0617C0.38321 10.1203 0.473182 10.1627 0.568784 10.1865C0.664386 10.2104 0.763747 10.2151 0.861193 10.2006C0.95864 10.186 1.05226 10.1524 1.13672 10.1016C1.22117 10.0509 1.29481 9.98401 1.35341 9.90481C1.41202 9.82561 1.45445 9.73563 1.47828 9.64003C1.94039 7.80328 3.00243 6.17335 4.49601 5.0087C5.09814 4.53918 5.75651 4.15611 6.452 3.86607L5.31613 2.73019ZM8.1299 5.54396C7.67419 5.74216 7.25505 6.02541 6.89686 6.38361C6.14671 7.13375 5.72528 8.15117 5.72528 9.21203C5.72528 10.2729 6.14671 11.2903 6.89686 12.0405C7.647 12.7906 8.66442 13.212 9.72528 13.212C10.7861 13.212 11.8036 12.7906 12.5537 12.0405C12.9119 11.6823 13.1952 11.2631 13.3934 10.8074L8.1299 5.54396ZM13.6959 9.69579L9.24153 5.24138C9.40122 5.22193 9.56274 5.21203 9.72528 5.21203C10.7861 5.21203 11.8036 5.63346 12.5537 6.38361C13.3039 7.13375 13.7253 8.15117 13.7253 9.21203C13.7253 9.37457 13.7154 9.53609 13.6959 9.69579ZM7.50577 3.50562L6.30815 2.308C7.39609 1.91278 8.55186 1.70671 9.72528 1.70703C14.3383 1.70703 18.3213 4.85703 19.4263 9.27103C19.4747 9.46398 19.4445 9.66825 19.3423 9.8389C19.24 10.0096 19.0742 10.1326 18.8813 10.181C18.6883 10.2294 18.4841 10.1992 18.3134 10.097C18.1428 9.99479 18.0197 9.82898 17.9713 9.63603C17.5083 7.7995 16.4455 6.17009 14.9513 5.00616C13.4572 3.84224 11.6172 3.21041 9.72322 3.21087C8.96933 3.21105 8.22404 3.31141 7.50577 3.50562Z"/>
+              </svg>
+            </button>
+            {{/if}}
           </div>
         </div>
 
