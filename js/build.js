@@ -56,7 +56,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
     $passwordNumberCkecker.attr('checked', rules.isNumber.test(passwordValue));
     $passwordSpecialCkecker.attr('checked', rules.isSpecial.test(passwordValue));
 
-    var isInvalid = _.some(rules, function(value) {
+    var isInvalid = Fliplet.Utils.some(rules, function(value) {
       return !value.test(passwordValue);
     });
 
@@ -132,7 +132,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
           return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
         }
 
-        if (_.get(session, 'server.passports.dataSource[0].requiresPasswordReset')) {
+        if (Fliplet.Utils.get(session, 'server.passports.dataSource[0].requiresPasswordReset')) {
           return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
         }
 

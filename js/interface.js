@@ -114,7 +114,7 @@ function initLinkProviders() {
     selector: '#login-link-action',
     // Also send the data I have locally, so that
     // the interface gets repopulated with the same stuff
-    data: _.assign({}, linkData, data.loginAction),
+    data: Fliplet.Utils.assign({}, linkData, data.loginAction),
     // Events fired from the provider
     onEvent: function(event, result) {
       if (event === 'interface-validate') {
@@ -129,7 +129,7 @@ function initLinkProviders() {
     selector: '#registration-link-action',
     // Also send the data I have locally, so that
     // the interface gets repopulated with the same stuff
-    data: _.assign({}, linkData, data.registrationAction),
+    data: Fliplet.Utils.assign({}, linkData, data.registrationAction),
     // Events fired from the provider
     onEvent: function(event, result) {
       if (event === 'onPageChange') {
@@ -137,7 +137,7 @@ function initLinkProviders() {
           return;
         }
 
-        data.registrationAction = _.assign({}, data.registrationAction, { page: result.value });
+        data.registrationAction = Fliplet.Utils.assign({}, data.registrationAction, { page: result.value });
       }
 
       if (event === 'interface-validate') {
@@ -260,8 +260,8 @@ function checkSecurityRules() {
       return;
     }
 
-    var hooks = _.get(result.app, 'hooks', []);
-    var isSecurityConfigured = _.some(hooks, function(hook) {
+    var hooks = Fliplet.Utils.get(result.app, 'hooks', []);
+    var isSecurityConfigured = Fliplet.Utils.some(hooks, function(hook) {
       return hook.script.indexOf(page.id) !== -1;
     });
 
@@ -275,7 +275,7 @@ function checkSecurityRules() {
 
 function save(notifyComplete) {
   // Get and save values to data
-  _.forEach(fields, function(fieldId) {
+  Fliplet.Utils.forEach(fields, function(fieldId) {
     if (fieldId === 'expireTimeout') {
       data[fieldId] = $('#expire-timeout').val() ? convertTimeToMinutes() : defaultExpireTimeout;
 
@@ -314,7 +314,7 @@ function save(notifyComplete) {
         definition.exclude = [];
       }
 
-      definition.exclude = _.compact(_.uniq(definition.exclude.concat([data.passColumn])));
+      definition.exclude = Fliplet.Utils.compact(Fliplet.Utils.uniq(definition.exclude.concat([data.passColumn])));
     }
 
     // convert hours into minutes
@@ -417,7 +417,7 @@ $('#security-alert u').on('click', function() {
 function initializeData() {
   checkSecurityRules();
 
-  _.forEach(fields, function(fieldId) {
+  Fliplet.Utils.forEach(fields, function(fieldId) {
     if (fieldId === 'expireTimeout') {
       setReadableExpirePeriod(data[fieldId] || defaultExpireTimeout);
     } else if (data[fieldId]) {
