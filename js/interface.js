@@ -330,8 +330,8 @@ function save(notifyComplete) {
   }
 
   data.hasSignupScreen = isPublicApp
-    ? !!(data.registrationAction && data.registrationAction.page)
-    : data.registrationAction && data.registrationAction.page !== 'none';
+    ? !!(data.registrationAction && data.registrationAction.page !== 'none')
+    : data.allowRegistrationButton && (data.registrationAction && data.registrationAction.page !== 'none');
 
   return updateDataSource.then(function() {
     return Fliplet.Widget.save(data).then(function() {
@@ -401,6 +401,20 @@ $('#allow_show_password').on('change', function() {
   initialLoadingDone = true;
 });
 
+$('#allow_registration_button').on('change', function() {
+  var checked = $(this).prop('checked');
+
+  data.allowRegistrationButton = checked;
+
+  $('.registration-button-config').toggleClass('hidden', !checked);
+
+  if (initialLoadingDone) {
+    save();
+  }
+
+  initialLoadingDone = true;
+});
+
 // Open security overlay
 $('#security-alert u').on('click', function() {
   Fliplet.Studio.emit('overlay', {
@@ -429,11 +443,22 @@ function initializeData() {
     $('#allow_reset').trigger('change');
   }
 
+  if (data.allowRegistrationButton) {
+    $('#allow_registration_button').trigger('change');
+  }
+
   $('.plan-name').text(planName);
 
   if (!isPublicApp) {
     $('#registration-alert').addClass('hidden');
-    $('.registration-optional-label').removeClass('hidden');
+    $('.registration-optional-button').removeClass('hidden');
+    $('.registration-subtitle-public').addClass('hidden');
+    $('.registration-subtitle-private').removeClass('hidden');
+  } else {
+    $('.registration-button-config').removeClass('hidden');
+    $('.registration-optional-button').addClass('hidden');
+    $('.registration-subtitle-public').removeClass('hidden');
+    $('.registration-subtitle-private').addClass('hidden');
   }
 }
 

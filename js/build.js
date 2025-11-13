@@ -99,7 +99,12 @@ Fliplet.Widget.instance('login-ds', function(data) {
   }
 
   function checkSignupButton() {
-    if (Fliplet.Env.get('preview') && isPublicApp() && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
+    if (Fliplet.Env.get('preview')
+      && isPublicApp()
+      && data.registrationAction
+      && data.registrationAction.page !== 'none'
+      && data.allowRegistrationButton
+      && isSignUpButtonHidden()) {
       $container.find('.signup-warning').removeClass('hidden');
     }
   }
@@ -234,7 +239,7 @@ Fliplet.Widget.instance('login-ds', function(data) {
 
       var _this = $(this);
 
-      if (isPublicApp() && data.registrationAction && data.registrationAction.page && isSignUpButtonHidden()) {
+      if (isPublicApp() && ((data.registrationAction && data.registrationAction.page === 'none') || isSignUpButtonHidden())) {
         return Fliplet.UI.Toast({
           type: 'regular',
           duration: false,
