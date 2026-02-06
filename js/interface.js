@@ -385,8 +385,6 @@ $('#allow_reset').on('change', function() {
   if (initialLoadingDone) {
     save();
   }
-
-  initialLoadingDone = true;
 });
 
 $('#allow_show_password').on('change', function() {
@@ -397,8 +395,6 @@ $('#allow_show_password').on('change', function() {
   if (initialLoadingDone) {
     save();
   }
-
-  initialLoadingDone = true;
 });
 
 $('#allow_registration_button').on('change', function() {
@@ -411,8 +407,6 @@ $('#allow_registration_button').on('change', function() {
   if (initialLoadingDone) {
     save();
   }
-
-  initialLoadingDone = true;
 });
 
 // Open security overlay
@@ -460,6 +454,8 @@ function initializeData() {
     $('.registration-subtitle-public').removeClass('hidden');
     $('.registration-subtitle-private').addClass('hidden');
   }
+
+  initialLoadingDone = true;
 }
 
 // Preveting entering invalid values in the expiration input
