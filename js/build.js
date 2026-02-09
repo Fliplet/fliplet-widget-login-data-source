@@ -234,6 +234,18 @@ Fliplet.Widget.instance('login-ds', function(data) {
   }
 
   function attachEventListeners() {
+    $container.off('submit', '.fl-login-form form');
+    $container.off('submit', '.form-verify-email');
+    $container.off('submit', '.form-verify-code');
+    $container.off('submit', '.form-reset-password');
+    $container.off('click keydown', '.btn-forget-pass');
+    $container.off('click keydown', '.btn-signup');
+    $container.off('click keydown', '.back-login');
+    $container.off('click', '.back.start');
+    $container.off('click', '.have-code');
+    $container.off('click', '.resend-code');
+    $container.off('click', '.toggle-password-visibility');
+
     $container.on('submit', '.fl-login-form form', function(e) {
       e.preventDefault();
 
