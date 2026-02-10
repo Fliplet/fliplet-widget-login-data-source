@@ -14,6 +14,7 @@
       "fliplet-datasources",
       "fliplet-studio-ui",
       "bootstrap",
+      "lodash",
       "tinymce"
     ],
     "assets": ["vendor/jquery.debounce.js", "js/interface.js", "css/interface.css"]
@@ -24,6 +25,7 @@
       "bootstrap-css",
       "handlebars",
       "font-awesome",
+      "lodash",
       "fliplet-security",
       "fliplet-communicate",
       "fliplet-datasources",
