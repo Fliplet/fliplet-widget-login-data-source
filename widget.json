@@ -12,6 +12,7 @@
       "fliplet-core",
       "handlebars",
       "fliplet-datasources",
+      "fliplet-utils",
       "fliplet-studio-ui",
       "bootstrap",
       "tinymce"
@@ -25,6 +26,7 @@
       "handlebars",
       "font-awesome",
       "fliplet-security",
+      "fliplet-utils",
       "fliplet-communicate",
       "fliplet-datasources",
       "fliplet-session"
