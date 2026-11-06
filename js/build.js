@@ -137,7 +137,14 @@ Fliplet.Widget.instance('login-ds', function(data) {
           return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
         }
 
-        if (Fliplet.Utils.get(session, 'server.passports.dataSource[0].requiresPasswordReset')) {
+        // Check every data source login: logins are appended, so the pending
+        // reset may not be the first record (DEV-2495)
+        var dataSourcePassports = Fliplet.Utils.get(session, 'server.passports.dataSource') || [];
+        var requiresPasswordReset = dataSourcePassports.some(function(passport) {
+          return passport && passport.requiresPasswordReset;
+        });
+
+        if (requiresPasswordReset) {
           return Promise.reject(T('widgets.login.dataSource.errors.sessionNotFound'));
         }
 
